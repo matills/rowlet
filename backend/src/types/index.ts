@@ -3,6 +3,75 @@ import type { Request } from 'express'
 export type ContentType = 'movie' | 'tv' | 'anime'
 export type WatchStatus = 'watching' | 'completed' | 'plan_to_watch' | 'dropped' | 'on_hold'
 
+// Database table types (matching Supabase schema with snake_case)
+export interface DbUser {
+  id: string
+  email: string
+  password: string
+  username: string
+  display_name?: string | null
+  avatar_url?: string | null
+  bio?: string | null
+  is_public: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface DbContent {
+  id: string
+  external_id: string
+  type: string
+  title: string
+  original_title?: string | null
+  poster_path?: string | null
+  backdrop_path?: string | null
+  overview?: string | null
+  release_date?: string | null
+  genres?: any // JSONB
+  rating?: number | null
+  vote_count?: number | null
+  runtime?: number | null
+  episode_count?: number | null
+  season_count?: number | null
+  status?: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface DbUserContent {
+  id: string
+  user_id: string
+  content_id: string
+  status: string
+  user_rating?: number | null
+  notes?: string | null
+  episodes_watched?: number | null
+  seasons_watched?: number | null
+  start_date?: string | null
+  end_date?: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface DbUserList {
+  id: string
+  user_id: string
+  name: string
+  description?: string | null
+  is_public: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface DbListItem {
+  id: string
+  list_id: string
+  content_id: string
+  order: number
+  added_at: string
+}
+
+// Application types (camelCase for API responses)
 export interface User {
   id: string
   email: string

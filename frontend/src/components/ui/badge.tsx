@@ -14,9 +14,24 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
-        watching: "border-transparent bg-blue-500 text-white",
-        completed: "border-transparent bg-green-500 text-white",
-        planToWatch: "border-transparent bg-yellow-500 text-black",
+        accent:
+          "border-transparent bg-accent text-accent-foreground hover:bg-accent/80",
+        watching:
+          "border-transparent bg-blue-500/15 text-blue-500",
+        completed:
+          "border-transparent bg-green-500/15 text-green-500",
+        planToWatch:
+          "border-transparent bg-purple-500/15 text-purple-500",
+        onHold:
+          "border-transparent bg-yellow-500/15 text-yellow-600",
+        dropped:
+          "border-transparent bg-red-500/15 text-red-500",
+        movie:
+          "border-transparent bg-primary/15 text-primary",
+        tv:
+          "border-transparent bg-secondary/15 text-secondary",
+        anime:
+          "border-transparent bg-accent/15 text-accent",
       },
     },
     defaultVariants: {

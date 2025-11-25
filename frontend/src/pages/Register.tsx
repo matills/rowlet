@@ -76,7 +76,7 @@ export function RegisterPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Crear cuenta</CardTitle>
             <CardDescription>
-              Únete a Rowlet y comienza a trackear tu entretenimiento
+              Únete a owlist y comienza a trackear tu entretenimiento
             </CardDescription>
           </CardHeader>
           <CardContent>

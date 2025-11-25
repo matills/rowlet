@@ -1,9 +1,9 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { prisma } from '../config/prisma.js'
+import { supabase } from '../config/supabase.js'
 import { authenticate } from '../middlewares/auth.js'
 import { AppError } from '../middlewares/errorHandler.js'
-import type { AuthRequest, WatchStatus } from '../types/index.js'
+import type { AuthRequest, WatchStatus, DbUserContent, DbContent } from '../types/index.js'
 
 export const userRouter = Router()
 
@@ -12,20 +12,26 @@ userRouter.get('/content', authenticate, async (req: AuthRequest, res, next) => 
   try {
     const { status } = req.query
 
-    const userContent = await prisma.userContent.findMany({
-      where: {
-        userId: req.user!.userId,
-        ...(status && { status: status as WatchStatus }),
-      },
-      include: {
-        content: true,
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    })
+    let query = supabase
+      .from('user_content')
+      .select(`
+        *,
+        content (*)
+      `)
+      .eq('user_id', req.user!.userId)
+      .order('updated_at', { ascending: false })
 
-    res.json(userContent)
+    if (status) {
+      query = query.eq('status', status as WatchStatus)
+    }
+
+    const { data: userContent, error } = await query
+
+    if (error) {
+      throw new AppError(500, 'Error al obtener el contenido')
+    }
+
+    res.json(userContent || [])
   } catch (error) {
     next(error)
   }
@@ -45,47 +51,63 @@ userRouter.post('/content', authenticate, async (req: AuthRequest, res, next) =>
     const data = schema.parse(req.body)
 
     // First, ensure content exists in our database
-    let content = await prisma.content.findFirst({
-      where: {
-        externalId: data.externalId,
-        type: data.type,
-      },
-    })
+    const { data: existingContent } = await supabase
+      .from('content')
+      .select('*')
+      .eq('external_id', data.externalId)
+      .eq('type', data.type)
+      .single<DbContent>()
+
+    let content = existingContent
 
     if (!content) {
-      content = await prisma.content.create({
-        data: {
-          externalId: data.externalId,
+      const { data: newContent, error: createError } = await supabase
+        .from('content')
+        .insert({
+          external_id: data.externalId,
           type: data.type,
           title: data.title,
-          posterPath: data.posterPath,
-        },
-      })
+          poster_path: data.posterPath,
+        })
+        .select()
+        .single<DbContent>()
+
+      if (createError || !newContent) {
+        throw new AppError(500, 'Error al crear el contenido')
+      }
+
+      content = newContent
     }
 
     // Check if user already has this content
-    const existingUserContent = await prisma.userContent.findFirst({
-      where: {
-        userId: req.user!.userId,
-        contentId: content.id,
-      },
-    })
+    const { data: existingUserContent } = await supabase
+      .from('user_content')
+      .select('id')
+      .eq('user_id', req.user!.userId)
+      .eq('content_id', content!.id)
+      .single()
 
     if (existingUserContent) {
       throw new AppError(400, 'El contenido ya está en tu lista')
     }
 
     // Add to user's list
-    const userContent = await prisma.userContent.create({
-      data: {
-        userId: req.user!.userId,
-        contentId: content.id,
+    const { data: userContent, error } = await supabase
+      .from('user_content')
+      .insert({
+        user_id: req.user!.userId,
+        content_id: content!.id,
         status: data.status,
-      },
-      include: {
-        content: true,
-      },
-    })
+      })
+      .select(`
+        *,
+        content (*)
+      `)
+      .single()
+
+    if (error || !userContent) {
+      throw new AppError(500, 'Error al agregar el contenido')
+    }
 
     res.status(201).json(userContent)
   } catch (error) {
@@ -108,28 +130,49 @@ userRouter.patch('/content/:id', authenticate, async (req: AuthRequest, res, nex
 
     const data = schema.parse(req.body)
 
-    const userContent = await prisma.userContent.findFirst({
-      where: {
-        id,
-        userId: req.user!.userId,
-      },
-    })
+    // First, get existing user content
+    const { data: existingUserContent } = await supabase
+      .from('user_content')
+      .select('*')
+      .eq('id', id)
+      .eq('user_id', req.user!.userId)
+      .single<DbUserContent>()
 
-    if (!userContent) {
+    if (!existingUserContent) {
       throw new AppError(404, 'Contenido no encontrado')
     }
 
-    const updated = await prisma.userContent.update({
-      where: { id },
-      data: {
-        ...data,
-        ...(data.status === 'completed' && !userContent.endDate && { endDate: new Date() }),
-        ...(data.status === 'watching' && !userContent.startDate && { startDate: new Date() }),
-      },
-      include: {
-        content: true,
-      },
-    })
+    // Build update data
+    const updateData: Partial<DbUserContent> = {}
+    if (data.status !== undefined) {
+      updateData.status = data.status
+      // Set end_date if completing
+      if (data.status === 'completed' && !existingUserContent.end_date) {
+        updateData.end_date = new Date().toISOString()
+      }
+      // Set start_date if starting to watch
+      if (data.status === 'watching' && !existingUserContent.start_date) {
+        updateData.start_date = new Date().toISOString()
+      }
+    }
+    if (data.userRating !== undefined) updateData.user_rating = data.userRating
+    if (data.notes !== undefined) updateData.notes = data.notes
+    if (data.episodesWatched !== undefined) updateData.episodes_watched = data.episodesWatched
+    if (data.seasonsWatched !== undefined) updateData.seasons_watched = data.seasonsWatched
+
+    const { data: updated, error } = await supabase
+      .from('user_content')
+      .update(updateData)
+      .eq('id', id)
+      .select(`
+        *,
+        content (*)
+      `)
+      .single()
+
+    if (error || !updated) {
+      throw new AppError(500, 'Error al actualizar el contenido')
+    }
 
     res.json(updated)
   } catch (error) {
@@ -142,20 +185,25 @@ userRouter.delete('/content/:id', authenticate, async (req: AuthRequest, res, ne
   try {
     const { id } = req.params
 
-    const userContent = await prisma.userContent.findFirst({
-      where: {
-        id,
-        userId: req.user!.userId,
-      },
-    })
+    const { data: userContent } = await supabase
+      .from('user_content')
+      .select('id')
+      .eq('id', id)
+      .eq('user_id', req.user!.userId)
+      .single()
 
     if (!userContent) {
       throw new AppError(404, 'Contenido no encontrado')
     }
 
-    await prisma.userContent.delete({
-      where: { id },
-    })
+    const { error } = await supabase
+      .from('user_content')
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      throw new AppError(500, 'Error al eliminar el contenido')
+    }
 
     res.status(204).send()
   } catch (error) {
@@ -168,19 +216,26 @@ userRouter.get('/stats', authenticate, async (req: AuthRequest, res, next) => {
   try {
     const userId = req.user!.userId
 
-    const userContent = await prisma.userContent.findMany({
-      where: { userId },
-      include: { content: true },
-    })
+    const { data: userContent, error } = await supabase
+      .from('user_content')
+      .select(`
+        *,
+        content (*)
+      `)
+      .eq('user_id', userId)
+
+    if (error) {
+      throw new AppError(500, 'Error al obtener las estadísticas')
+    }
 
     const stats = {
-      totalWatched: userContent.filter(c => c.status === 'completed').length,
-      totalWatching: userContent.filter(c => c.status === 'watching').length,
-      totalPlanToWatch: userContent.filter(c => c.status === 'plan_to_watch').length,
+      totalWatched: userContent?.filter(c => c.status === 'completed').length || 0,
+      totalWatching: userContent?.filter(c => c.status === 'watching').length || 0,
+      totalPlanToWatch: userContent?.filter(c => c.status === 'plan_to_watch').length || 0,
       totalHoursWatched: 0, // Would need runtime data
-      movieCount: userContent.filter(c => c.content.type === 'movie').length,
-      tvCount: userContent.filter(c => c.content.type === 'tv').length,
-      animeCount: userContent.filter(c => c.content.type === 'anime').length,
+      movieCount: userContent?.filter((c: any) => c.content?.type === 'movie').length || 0,
+      tvCount: userContent?.filter((c: any) => c.content?.type === 'tv').length || 0,
+      animeCount: userContent?.filter((c: any) => c.content?.type === 'anime').length || 0,
       favoriteGenres: [], // Would aggregate from content genres
       monthlyActivity: [], // Would aggregate by month
     }
@@ -199,22 +254,25 @@ userRouter.get('/wrapped', authenticate, async (req: AuthRequest, res, next) => 
 
     const userId = req.user!.userId
 
-    const userContent = await prisma.userContent.findMany({
-      where: {
-        userId,
-        status: 'completed',
-        endDate: {
-          gte: new Date(`${targetYear}-01-01`),
-          lt: new Date(`${targetYear + 1}-01-01`),
-        },
-      },
-      include: { content: true },
-    })
+    const { data: userContent, error } = await supabase
+      .from('user_content')
+      .select(`
+        *,
+        content (*)
+      `)
+      .eq('user_id', userId)
+      .eq('status', 'completed')
+      .gte('end_date', `${targetYear}-01-01`)
+      .lt('end_date', `${targetYear + 1}-01-01`)
+
+    if (error) {
+      throw new AppError(500, 'Error al obtener datos de wrapped')
+    }
 
     const wrapped = {
       year: targetYear,
       totalHoursWatched: 0,
-      totalContentWatched: userContent.length,
+      totalContentWatched: userContent?.length || 0,
       topGenres: [],
       topActors: [],
       topDirectors: [],
@@ -222,9 +280,9 @@ userRouter.get('/wrapped', authenticate, async (req: AuthRequest, res, next) => 
       longestBinge: null,
       mostWatchedMonth: null,
       contentByType: {
-        movies: userContent.filter(c => c.content.type === 'movie').length,
-        tvShows: userContent.filter(c => c.content.type === 'tv').length,
-        anime: userContent.filter(c => c.content.type === 'anime').length,
+        movies: userContent?.filter((c: any) => c.content?.type === 'movie').length || 0,
+        tvShows: userContent?.filter((c: any) => c.content?.type === 'tv').length || 0,
+        anime: userContent?.filter((c: any) => c.content?.type === 'anime').length || 0,
       },
     }
 

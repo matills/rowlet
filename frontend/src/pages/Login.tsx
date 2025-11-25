@@ -58,7 +58,7 @@ export function LoginPage() {
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Bienvenido de vuelta</CardTitle>
             <CardDescription>
-              Inicia sesión en tu cuenta de Rowlet
+              Inicia sesión en tu cuenta de owlist
             </CardDescription>
           </CardHeader>
           <CardContent>

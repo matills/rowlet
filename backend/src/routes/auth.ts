@@ -2,11 +2,11 @@ import { Router } from 'express'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { prisma } from '../config/prisma.js'
+import { supabase } from '../config/supabase.js'
 import { env } from '../config/env.js'
 import { authenticate } from '../middlewares/auth.js'
 import { AppError } from '../middlewares/errorHandler.js'
-import type { AuthRequest } from '../types/index.js'
+import type { AuthRequest, DbUser } from '../types/index.js'
 
 export const authRouter = Router()
 
@@ -28,16 +28,13 @@ authRouter.post('/register', async (req, res, next) => {
     const data = registerSchema.parse(req.body)
 
     // Check if user exists
-    const existingUser = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { email: data.email },
-          { username: data.username },
-        ],
-      },
-    })
+    const { data: existingUsers } = await supabase
+      .from('users')
+      .select('id')
+      .or(`email.eq.${data.email},username.eq.${data.username}`)
+      .limit(1)
 
-    if (existingUser) {
+    if (existingUsers && existingUsers.length > 0) {
       throw new AppError(400, 'El email o nombre de usuario ya está en uso')
     }
 
@@ -45,14 +42,20 @@ authRouter.post('/register', async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(data.password, 10)
 
     // Create user
-    const user = await prisma.user.create({
-      data: {
+    const { data: user, error } = await supabase
+      .from('users')
+      .insert({
         email: data.email,
         password: hashedPassword,
         username: data.username,
-        displayName: data.displayName,
-      },
-    })
+        display_name: data.displayName,
+      })
+      .select()
+      .single<DbUser>()
+
+    if (error || !user) {
+      throw new AppError(500, 'Error al crear el usuario')
+    }
 
     // Generate token
     const token = jwt.sign(
@@ -66,10 +69,10 @@ authRouter.post('/register', async (req, res, next) => {
         id: user.id,
         email: user.email,
         username: user.username,
-        displayName: user.displayName,
-        avatarUrl: user.avatarUrl,
-        isPublic: user.isPublic,
-        createdAt: user.createdAt,
+        displayName: user.display_name,
+        avatarUrl: user.avatar_url,
+        isPublic: user.is_public,
+        createdAt: user.created_at,
       },
       token,
     })
@@ -84,11 +87,13 @@ authRouter.post('/login', async (req, res, next) => {
     const data = loginSchema.parse(req.body)
 
     // Find user
-    const user = await prisma.user.findUnique({
-      where: { email: data.email },
-    })
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', data.email)
+      .single<DbUser>()
 
-    if (!user) {
+    if (error || !user) {
       throw new AppError(401, 'Credenciales inválidas')
     }
 
@@ -111,10 +116,10 @@ authRouter.post('/login', async (req, res, next) => {
         id: user.id,
         email: user.email,
         username: user.username,
-        displayName: user.displayName,
-        avatarUrl: user.avatarUrl,
-        isPublic: user.isPublic,
-        createdAt: user.createdAt,
+        displayName: user.display_name,
+        avatarUrl: user.avatar_url,
+        isPublic: user.is_public,
+        createdAt: user.created_at,
       },
       token,
     })
@@ -126,11 +131,13 @@ authRouter.post('/login', async (req, res, next) => {
 // Get profile
 authRouter.get('/profile', authenticate, async (req: AuthRequest, res, next) => {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: req.user!.userId },
-    })
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', req.user!.userId)
+      .single<DbUser>()
 
-    if (!user) {
+    if (error || !user) {
       throw new AppError(404, 'Usuario no encontrado')
     }
 
@@ -138,11 +145,11 @@ authRouter.get('/profile', authenticate, async (req: AuthRequest, res, next) => 
       id: user.id,
       email: user.email,
       username: user.username,
-      displayName: user.displayName,
-      avatarUrl: user.avatarUrl,
+      displayName: user.display_name,
+      avatarUrl: user.avatar_url,
       bio: user.bio,
-      isPublic: user.isPublic,
-      createdAt: user.createdAt,
+      isPublic: user.is_public,
+      createdAt: user.created_at,
     })
   } catch (error) {
     next(error)
@@ -161,20 +168,33 @@ authRouter.patch('/profile', authenticate, async (req: AuthRequest, res, next) =
 
     const data = updateSchema.parse(req.body)
 
-    const user = await prisma.user.update({
-      where: { id: req.user!.userId },
-      data,
-    })
+    // Convert camelCase to snake_case
+    const updateData: Partial<DbUser> = {}
+    if (data.displayName !== undefined) updateData.display_name = data.displayName
+    if (data.bio !== undefined) updateData.bio = data.bio
+    if (data.avatarUrl !== undefined) updateData.avatar_url = data.avatarUrl
+    if (data.isPublic !== undefined) updateData.is_public = data.isPublic
+
+    const { data: user, error } = await supabase
+      .from('users')
+      .update(updateData)
+      .eq('id', req.user!.userId)
+      .select()
+      .single<DbUser>()
+
+    if (error || !user) {
+      throw new AppError(500, 'Error al actualizar el perfil')
+    }
 
     res.json({
       id: user.id,
       email: user.email,
       username: user.username,
-      displayName: user.displayName,
-      avatarUrl: user.avatarUrl,
+      displayName: user.display_name,
+      avatarUrl: user.avatar_url,
       bio: user.bio,
-      isPublic: user.isPublic,
-      createdAt: user.createdAt,
+      isPublic: user.is_public,
+      createdAt: user.created_at,
     })
   } catch (error) {
     next(error)
