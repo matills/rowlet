@@ -34,9 +34,9 @@ export function Navbar({ onMenuClick }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex h-16 items-center justify-between gap-2 px-4 md:gap-4 md:px-6">
         {/* Left side - Menu button (mobile) */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
           <Button
             variant="ghost"
             size="icon"
@@ -54,18 +54,18 @@ export function Navbar({ onMenuClick }: NavbarProps) {
         </div>
 
         {/* Center - Search (desktop) */}
-        <div className="hidden flex-1 justify-center md:flex">
+        <div className="hidden flex-1 justify-center md:flex min-w-0">
           <Link
             to="/search"
-            className="flex w-full max-w-md items-center gap-2 rounded-full border bg-muted/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted"
+            className="flex w-full max-w-md items-center gap-2 rounded-full border bg-muted/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted min-w-0"
           >
-            <Search className="h-4 w-4" />
-            <span>Buscar películas, series, anime...</span>
+            <Search className="h-4 w-4 shrink-0" />
+            <span className="truncate">Buscar películas, series, anime...</span>
           </Link>
         </div>
 
         {/* Right side - Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Search button (mobile) */}
           <Link to="/search" className="md:hidden">
             <Button variant="ghost" size="icon">

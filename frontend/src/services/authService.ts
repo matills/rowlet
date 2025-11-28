@@ -40,15 +40,24 @@ export const authService = {
   },
 
   async loginWithGoogle(): Promise<void> {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
 
-    if (error) {
-      throw error
+      if (error) {
+        // If provider is not enabled, throw a user-friendly error
+        if (error.message.includes('provider') || error.message.includes('not enabled')) {
+          throw new Error('Google login no está configurado. Por favor, contacta al administrador o usa email y contraseña.')
+        }
+        throw error
+      }
+    } catch (error: any) {
+      // Re-throw with a user-friendly message
+      throw new Error(error.message || 'Error al iniciar sesión con Google')
     }
   },
 

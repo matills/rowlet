@@ -47,8 +47,17 @@ export function LoginPage() {
     }
   }
 
+  const handleGoogleLogin = async () => {
+    try {
+      setError(null)
+      await loginWithGoogle()
+    } catch (err: any) {
+      setError(err.message || 'Error al iniciar sesión con Google')
+    }
+  }
+
   return (
-    <div className="flex min-h-[80vh] w-full items-center justify-center px-4">
+    <div className="flex min-h-screen w-full items-center justify-center px-4 bg-background">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -135,7 +144,7 @@ export function LoginPage() {
             <Button
               variant="outline"
               className="w-full"
-              onClick={loginWithGoogle}
+              onClick={handleGoogleLogin}
             >
               <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                 <path

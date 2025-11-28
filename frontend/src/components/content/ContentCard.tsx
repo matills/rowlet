@@ -44,8 +44,11 @@ export function ContentCard({
   const [isInList, setIsInList] = useState(!!userStatus)
   const [isHovered, setIsHovered] = useState(false)
 
+  // Check if posterPath is a full URL (for anime from Jikan) or a path (for TMDB)
   const imageUrl = content.posterPath
-    ? `${TMDB_IMAGE_BASE}${content.posterPath}`
+    ? content.posterPath.startsWith('http')
+      ? content.posterPath
+      : `${TMDB_IMAGE_BASE}${content.posterPath}`
     : '/placeholder-poster.jpg'
 
   const handleAddToList = (e: React.MouseEvent, status: WatchStatus) => {
