@@ -1,6 +1,7 @@
 export { ContentCard } from './ContentCard'
 export { ContentGrid } from './ContentGrid'
 export { SearchBar } from './SearchBar'
+export { SearchFilters } from './SearchFilters'
 export { StatusSelector } from './StatusSelector'
 export { StatusBadge } from './StatusBadge'
 export { ProgressBar } from './ProgressBar'

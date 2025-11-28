@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Filter } from 'lucide-react'
 import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui'
-import { SearchBar, ContentGrid } from '@/components/content'
+import { SearchBar, ContentGrid, SearchFilters } from '@/components/content'
 import { useContentSearch, useAuth, useAddToList } from '@/hooks'
 import type { ContentType } from '@/types'
 
@@ -10,10 +10,13 @@ export function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const initialQuery = searchParams.get('q') || ''
   const initialType = searchParams.get('type') || 'all'
+  const initialGenres = searchParams.get('genres')?.split(',').map(Number).filter(Boolean) || []
+
   const [query, setQuery] = useState(initialQuery)
   const [contentType, setContentType] = useState<ContentType | undefined>(
     initialType === 'all' ? undefined : (initialType as ContentType)
   )
+  const [selectedGenres, setSelectedGenres] = useState<number[]>(initialGenres)
 
   const { isAuthenticated } = useAuth()
   const addToList = useAddToList()
@@ -21,39 +24,59 @@ export function SearchPage() {
   const { data, isLoading, isFetching } = useContentSearch({
     query,
     type: contentType,
+    genre: selectedGenres.length > 0 ? selectedGenres[0] : undefined, // Backend only supports one genre
     page: 1,
   })
 
   useEffect(() => {
     const q = searchParams.get('q')
     const type = searchParams.get('type')
+    const genres = searchParams.get('genres')?.split(',').map(Number).filter(Boolean) || []
+
     if (q) {
       setQuery(q)
     }
     if (type) {
       setContentType(type === 'all' ? undefined : (type as ContentType))
     }
+    if (genres.length > 0) {
+      setSelectedGenres(genres)
+    }
   }, [searchParams])
 
   const handleSearch = (newQuery: string) => {
     setQuery(newQuery)
-    const params: Record<string, string> = { q: newQuery }
-    if (contentType) {
-      params.type = contentType
-    }
-    setSearchParams(params)
+    updateSearchParams(newQuery, contentType, selectedGenres)
   }
 
   const handleTypeChange = (value: string) => {
     const newType = value === 'all' ? undefined : (value as ContentType)
     setContentType(newType)
     if (query) {
-      const params: Record<string, string> = { q: query }
-      if (newType) {
-        params.type = newType
-      }
-      setSearchParams(params)
+      updateSearchParams(query, newType, selectedGenres)
     }
+  }
+
+  const handleGenresChange = (genres: number[]) => {
+    setSelectedGenres(genres)
+    if (query) {
+      updateSearchParams(query, contentType, genres)
+    }
+  }
+
+  const updateSearchParams = (
+    q: string,
+    type?: ContentType,
+    genres?: number[]
+  ) => {
+    const params: Record<string, string> = { q }
+    if (type) {
+      params.type = type
+    }
+    if (genres && genres.length > 0) {
+      params.genres = genres.join(',')
+    }
+    setSearchParams(params)
   }
 
   return (
@@ -81,6 +104,11 @@ export function SearchPage() {
             <TabsTrigger value="tv">Series</TabsTrigger>
             <TabsTrigger value="anime">Anime</TabsTrigger>
           </TabsList>
+          <SearchFilters
+            contentType={contentType}
+            selectedGenres={selectedGenres}
+            onGenresChange={handleGenresChange}
+          />
         </div>
 
         <TabsContent value="all" className="mt-6">
