@@ -129,6 +129,9 @@ export function SearchBar({
 
   const getImageUrl = (posterPath?: string) => {
     if (!posterPath) return '/placeholder.jpg'
+    // If posterPath is already a full URL (from Jikan), use it directly
+    if (posterPath.startsWith('http')) return posterPath
+    // Otherwise, it's a TMDB path, add the base URL
     return `https://image.tmdb.org/t/p/w92${posterPath}`
   }
 

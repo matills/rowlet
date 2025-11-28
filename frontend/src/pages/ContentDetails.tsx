@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Star, Calendar, Clock, Plus, Check, Eye, Play } from 'lucide-react'
+import { ArrowLeft, Star, Calendar, Clock, Plus, Check, Eye } from 'lucide-react'
 import { motion } from 'framer-motion'
 import {
   Button,
@@ -8,9 +8,6 @@ import {
   CardHeader,
   CardTitle,
   Badge,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
 } from '@/components/ui'
 import { useContentDetails, useAuth, useAddToList } from '@/hooks'
 import type { ContentType, WatchStatus } from '@/types'
@@ -182,8 +179,8 @@ export function ContentDetailsPage() {
               {content.genres && content.genres.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {content.genres.map((genre) => (
-                    <Badge key={genre} variant="outline">
-                      {genre}
+                    <Badge key={typeof genre === 'object' ? genre.id : genre} variant="outline">
+                      {typeof genre === 'object' ? genre.name : genre}
                     </Badge>
                   ))}
                 </div>

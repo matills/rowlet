@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Filter } from 'lucide-react'
-import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui'
-import { SearchBar, ContentGrid, SearchFilters } from '@/components/content'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui'
+import { SearchBar, ContentGrid, SearchFilters, type FilterOptions } from '@/components/content'
 import { useContentSearch, useAuth, useAddToList } from '@/hooks'
 import type { ContentType } from '@/types'
 
@@ -11,12 +10,22 @@ export function SearchPage() {
   const initialQuery = searchParams.get('q') || ''
   const initialType = searchParams.get('type') || 'all'
   const initialGenres = searchParams.get('genres')?.split(',').map(Number).filter(Boolean) || []
+  const initialYear = searchParams.get('year') ? parseInt(searchParams.get('year')!) : undefined
+  const initialMinRating = searchParams.get('minRating') ? parseFloat(searchParams.get('minRating')!) : undefined
+  const initialSortBy = searchParams.get('sortBy') as FilterOptions['sortBy']
+  const initialSortOrder = searchParams.get('sortOrder') as FilterOptions['sortOrder']
 
   const [query, setQuery] = useState(initialQuery)
   const [contentType, setContentType] = useState<ContentType | undefined>(
     initialType === 'all' ? undefined : (initialType as ContentType)
   )
-  const [selectedGenres, setSelectedGenres] = useState<number[]>(initialGenres)
+  const [filters, setFilters] = useState<FilterOptions>({
+    genres: initialGenres,
+    year: initialYear,
+    minRating: initialMinRating,
+    sortBy: initialSortBy,
+    sortOrder: initialSortOrder,
+  })
 
   const { isAuthenticated } = useAuth()
   const addToList = useAddToList()
@@ -24,7 +33,11 @@ export function SearchPage() {
   const { data, isLoading, isFetching } = useContentSearch({
     query,
     type: contentType,
-    genre: selectedGenres.length > 0 ? selectedGenres[0] : undefined, // Backend only supports one genre
+    genre: filters.genres.length > 0 ? filters.genres[0] : undefined, // Backend only supports one genre
+    year: filters.year,
+    minRating: filters.minRating,
+    sortBy: filters.sortBy,
+    sortOrder: filters.sortOrder,
     page: 1,
   })
 
@@ -32,6 +45,10 @@ export function SearchPage() {
     const q = searchParams.get('q')
     const type = searchParams.get('type')
     const genres = searchParams.get('genres')?.split(',').map(Number).filter(Boolean) || []
+    const year = searchParams.get('year') ? parseInt(searchParams.get('year')!) : undefined
+    const minRating = searchParams.get('minRating') ? parseFloat(searchParams.get('minRating')!) : undefined
+    const sortBy = searchParams.get('sortBy') as FilterOptions['sortBy']
+    const sortOrder = searchParams.get('sortOrder') as FilterOptions['sortOrder']
 
     if (q) {
       setQuery(q)
@@ -39,42 +56,60 @@ export function SearchPage() {
     if (type) {
       setContentType(type === 'all' ? undefined : (type as ContentType))
     }
-    if (genres.length > 0) {
-      setSelectedGenres(genres)
-    }
+    setFilters({
+      genres,
+      year,
+      minRating,
+      sortBy,
+      sortOrder,
+    })
   }, [searchParams])
 
   const handleSearch = (newQuery: string) => {
     setQuery(newQuery)
-    updateSearchParams(newQuery, contentType, selectedGenres)
+    updateSearchParams(newQuery, contentType, filters)
   }
 
   const handleTypeChange = (value: string) => {
     const newType = value === 'all' ? undefined : (value as ContentType)
     setContentType(newType)
     if (query) {
-      updateSearchParams(query, newType, selectedGenres)
+      updateSearchParams(query, newType, filters)
     }
   }
 
-  const handleGenresChange = (genres: number[]) => {
-    setSelectedGenres(genres)
+  const handleFiltersChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters)
     if (query) {
-      updateSearchParams(query, contentType, genres)
+      updateSearchParams(query, contentType, newFilters)
     }
   }
 
   const updateSearchParams = (
     q: string,
     type?: ContentType,
-    genres?: number[]
+    filterOptions?: FilterOptions
   ) => {
     const params: Record<string, string> = { q }
     if (type) {
       params.type = type
     }
-    if (genres && genres.length > 0) {
-      params.genres = genres.join(',')
+    if (filterOptions) {
+      if (filterOptions.genres.length > 0) {
+        params.genres = filterOptions.genres.join(',')
+      }
+      if (filterOptions.year) {
+        params.year = filterOptions.year.toString()
+      }
+      if (filterOptions.minRating) {
+        params.minRating = filterOptions.minRating.toString()
+      }
+      if (filterOptions.sortBy) {
+        params.sortBy = filterOptions.sortBy
+      }
+      if (filterOptions.sortOrder) {
+        params.sortOrder = filterOptions.sortOrder
+      }
     }
     setSearchParams(params)
   }
@@ -106,8 +141,8 @@ export function SearchPage() {
           </TabsList>
           <SearchFilters
             contentType={contentType}
-            selectedGenres={selectedGenres}
-            onGenresChange={handleGenresChange}
+            filters={filters}
+            onFiltersChange={handleFiltersChange}
           />
         </div>
 

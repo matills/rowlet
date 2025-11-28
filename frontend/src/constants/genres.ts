@@ -69,13 +69,26 @@ export function getGenresForType(type?: 'movie' | 'tv' | 'anime'): Genre[] {
       return ANIME_GENRES
     default:
       // For 'all', return a combined unique list
-      const allGenres = [...MOVIE_GENRES, ...TV_GENRES, ...ANIME_GENRES]
+      // Use both ID and name to avoid conflicts between TMDB and Jikan genres
       const uniqueGenres = new Map<string, Genre>()
-      allGenres.forEach((genre) => {
+      const seenIds = new Map<number, string>() // Track which names are using each ID
+
+      ;[...MOVIE_GENRES, ...TV_GENRES, ...ANIME_GENRES].forEach((genre) => {
+        // Check if this name already exists
         if (!uniqueGenres.has(genre.name)) {
+          // Check if this ID is already used by a different name
+          const existingName = seenIds.get(genre.id)
+          if (existingName && existingName !== genre.name) {
+            // ID conflict detected - skip this genre to avoid confusion
+            console.warn(`Genre ID conflict: ${genre.name} (${genre.id}) conflicts with ${existingName}`)
+            return
+          }
+
           uniqueGenres.set(genre.name, genre)
+          seenIds.set(genre.id, genre.name)
         }
       })
+
       return Array.from(uniqueGenres.values()).sort((a, b) =>
         a.name.localeCompare(b.name)
       )
