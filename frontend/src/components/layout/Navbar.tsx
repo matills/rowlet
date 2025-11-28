@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Search, Bell, Menu, Sun, Moon, LogOut, User, Settings, BarChart3 } from 'lucide-react'
-import { Button, Avatar, AvatarImage, AvatarFallback } from '@/components/ui'
+import { Button, Avatar, AvatarImage, AvatarFallback, OwlLogo } from '@/components/ui'
 import { useAuth } from '@/hooks'
 import { useThemeStore } from '@/stores'
 import { cn } from '@/lib/utils'
@@ -48,7 +48,8 @@ export function Navbar({ onMenuClick }: NavbarProps) {
 
           {/* Logo - hidden on desktop as it's in sidebar */}
           <Link to="/" className="flex items-center gap-2 md:hidden">
-            <span className="text-xl font-bold gradient-text">owlist</span>
+            <OwlLogo size={28} />
+            <span className="text-xl font-bold gradient-text">Owlist</span>
           </Link>
         </div>
 

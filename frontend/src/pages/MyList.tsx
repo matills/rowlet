@@ -173,9 +173,9 @@ export function MyListPage() {
                   content={content}
                   isLoading={isLoading}
                   userContentStatus={userContentStatus}
-                  onAddToList={(contentId, status) => {
+                  onAddToList={(content, status) => {
                     const userContentItem = userContent?.find(
-                      (uc) => uc.content.id === contentId
+                      (uc) => uc.content.id === content.id
                     )
                     if (userContentItem) {
                       updateContent.mutate({

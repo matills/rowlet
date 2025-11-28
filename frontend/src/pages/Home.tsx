@@ -135,7 +135,7 @@ export function HomePage() {
           isLoading={isLoadingMovies}
           onAddToList={
             isAuthenticated
-              ? (contentId, status) => addToList.mutate({ contentId, status })
+              ? (content, status) => addToList.mutate({ content, status })
               : undefined
           }
         />
@@ -163,7 +163,7 @@ export function HomePage() {
           isLoading={isLoadingTV}
           onAddToList={
             isAuthenticated
-              ? (contentId, status) => addToList.mutate({ contentId, status })
+              ? (content, status) => addToList.mutate({ content, status })
               : undefined
           }
         />
@@ -191,7 +191,7 @@ export function HomePage() {
           isLoading={isLoadingAnime}
           onAddToList={
             isAuthenticated
-              ? (contentId, status) => addToList.mutate({ contentId, status })
+              ? (content, status) => addToList.mutate({ content, status })
               : undefined
           }
         />
@@ -211,7 +211,7 @@ export function HomePage() {
               Todo lo que necesitas para tu entretenimiento
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-              owlist te ayuda a organizar y descubrir el mejor contenido
+              Owlist te ayuda a organizar y descubrir el mejor contenido
             </p>
           </motion.div>
 

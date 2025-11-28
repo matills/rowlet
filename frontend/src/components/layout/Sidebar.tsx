@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Home, Search, List, BarChart3, User, Film, Tv, Clapperboard, X, LogIn } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui'
+import { Button, OwlLogo } from '@/components/ui'
 import { useAuth } from '@/hooks'
 
 interface SidebarProps {
@@ -66,14 +66,15 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 transform border-r bg-card transition-transform duration-300 md:relative md:translate-x-0',
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+          'fixed inset-y-0 left-0 z-50 w-64 transform border-r bg-card transition-transform duration-300',
+          isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         )}
       >
         {/* Mobile Header */}
         <div className="flex h-16 items-center justify-between border-b px-4 md:hidden">
           <Link to="/" className="flex items-center gap-2" onClick={onClose}>
-            <span className="text-xl font-bold gradient-text">owlist</span>
+            <OwlLogo size={28} />
+            <span className="text-xl font-bold gradient-text">Owlist</span>
           </Link>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-5 w-5" />
@@ -83,7 +84,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* Desktop Header */}
         <div className="hidden h-16 items-center border-b px-6 md:flex">
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold gradient-text">owlist</span>
+            <OwlLogo size={32} />
+            <span className="text-xl font-bold gradient-text">Owlist</span>
           </Link>
         </div>
 

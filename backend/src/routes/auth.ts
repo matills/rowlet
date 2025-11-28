@@ -205,3 +205,85 @@ authRouter.patch('/profile', authenticate, async (req: AuthRequest, res, next) =
 authRouter.post('/logout', authenticate, (req, res) => {
   res.json({ message: 'Logged out successfully' })
 })
+
+// OAuth - Sync Supabase user with backend
+authRouter.post('/oauth', async (req, res, next) => {
+  try {
+    const { email, name, avatarUrl } = req.body
+
+    if (!email) {
+      throw new AppError(400, 'Email es requerido')
+    }
+
+    // Check if user exists
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single<DbUser>()
+
+    let user: DbUser
+
+    if (existingUser) {
+      // User exists, update their info
+      const { data: updatedUser, error } = await supabase
+        .from('users')
+        .update({
+          display_name: name || existingUser.display_name,
+          avatar_url: avatarUrl || existingUser.avatar_url,
+        })
+        .eq('id', existingUser.id)
+        .select()
+        .single<DbUser>()
+
+      if (error || !updatedUser) {
+        throw new AppError(500, 'Error al actualizar el usuario')
+      }
+
+      user = updatedUser
+    } else {
+      // Create new user
+      const username = email.split('@')[0] + '_' + Math.random().toString(36).substring(7)
+
+      const { data: newUser, error } = await supabase
+        .from('users')
+        .insert({
+          email: email,
+          username: username,
+          display_name: name || username,
+          avatar_url: avatarUrl,
+          password: '', // No password for OAuth users
+        })
+        .select()
+        .single<DbUser>()
+
+      if (error || !newUser) {
+        throw new AppError(500, 'Error al crear el usuario')
+      }
+
+      user = newUser
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      env.JWT_SECRET,
+      { expiresIn: env.JWT_EXPIRES_IN }
+    )
+
+    res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        displayName: user.display_name,
+        avatarUrl: user.avatar_url,
+        isPublic: user.is_public,
+        createdAt: user.created_at,
+      },
+      token,
+    })
+  } catch (error) {
+    next(error)
+  }
+})

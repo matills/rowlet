@@ -5,7 +5,7 @@ import type { Content, WatchStatus } from '@/types'
 interface ContentGridProps {
   content: Content[]
   isLoading?: boolean
-  onAddToList?: (contentId: string, status: WatchStatus) => void
+  onAddToList?: (content: Content, status: WatchStatus) => void
   userContentStatus?: Record<string, WatchStatus>
 }
 
@@ -44,7 +44,7 @@ export function ContentGrid({
           key={`${item.type}-${item.externalId}`}
           content={item}
           userStatus={userContentStatus[item.id]}
-          onAddToList={onAddToList ? (status) => onAddToList(item.id, status) : undefined}
+          onAddToList={onAddToList ? (status) => onAddToList(item, status) : undefined}
         />
       ))}
     </div>

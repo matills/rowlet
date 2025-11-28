@@ -79,7 +79,7 @@ export function SearchPage() {
                 isLoading={isLoading || isFetching}
                 onAddToList={
                   isAuthenticated
-                    ? (contentId, status) => addToList.mutate({ contentId, status })
+                    ? (content, status) => addToList.mutate({ content, status })
                     : undefined
                 }
               />
@@ -100,7 +100,7 @@ export function SearchPage() {
               isLoading={isLoading || isFetching}
               onAddToList={
                 isAuthenticated
-                  ? (contentId, status) => addToList.mutate({ contentId, status })
+                  ? (content, status) => addToList.mutate({ content, status })
                   : undefined
               }
             />

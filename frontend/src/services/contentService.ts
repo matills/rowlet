@@ -47,9 +47,15 @@ export const contentService = {
     return data
   },
 
-  async addToList(contentId: string, status: WatchStatus): Promise<UserContent> {
+  async addToList(
+    content: { externalId: string; type: ContentType; title: string; posterPath?: string },
+    status: WatchStatus
+  ): Promise<UserContent> {
     const { data } = await api.post<UserContent>('/user/content', {
-      contentId,
+      externalId: content.externalId,
+      type: content.type,
+      title: content.title,
+      posterPath: content.posterPath,
       status,
     })
     return data

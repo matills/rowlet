@@ -1,4 +1,5 @@
 import { api } from './api'
+import { supabase } from '@/config/supabase'
 import type { User, LoginCredentials, RegisterCredentials } from '@/types'
 
 interface AuthResponse {
@@ -18,7 +19,14 @@ export const authService = {
   },
 
   async logout(): Promise<void> {
-    await api.post('/auth/logout')
+    // Sign out from Supabase
+    await supabase.auth.signOut()
+    // Also call backend logout if using traditional auth
+    try {
+      await api.post('/auth/logout')
+    } catch (error) {
+      // Ignore backend logout errors
+    }
   },
 
   async getProfile(): Promise<User> {
@@ -32,6 +40,38 @@ export const authService = {
   },
 
   async loginWithGoogle(): Promise<void> {
-    window.location.href = `${api.defaults.baseURL}/auth/google`
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+
+    if (error) {
+      throw error
+    }
+  },
+
+  async handleOAuthCallback(): Promise<AuthResponse | null> {
+    const { data: { session }, error } = await supabase.auth.getSession()
+
+    if (error || !session) {
+      return null
+    }
+
+    // Get or create user in backend
+    try {
+      const { data } = await api.post<AuthResponse>('/auth/oauth', {
+        supabaseToken: session.access_token,
+        email: session.user.email,
+        name: session.user.user_metadata.full_name || session.user.user_metadata.name,
+        avatarUrl: session.user.user_metadata.avatar_url,
+      })
+
+      return data
+    } catch (error) {
+      console.error('Error syncing user with backend:', error)
+      return null
+    }
   },
 }

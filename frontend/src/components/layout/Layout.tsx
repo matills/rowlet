@@ -11,7 +11,7 @@ export function Layout() {
       <Navbar onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
       <div className="flex">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 p-4 md:p-6 lg:p-8">
+        <main className="flex-1 p-4 md:ml-64 md:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

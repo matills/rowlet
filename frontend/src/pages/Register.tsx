@@ -66,17 +66,18 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center">
+    <div className="flex min-h-[80vh] w-full items-center justify-center px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
+        className="w-full max-w-md"
       >
-        <Card className="w-full max-w-md">
+        <Card className="w-full">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Crear cuenta</CardTitle>
             <CardDescription>
-              Únete a owlist y comienza a trackear tu entretenimiento
+              Únete a Owlist y comienza a trackear tu entretenimiento
             </CardDescription>
           </CardHeader>
           <CardContent>

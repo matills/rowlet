@@ -9,7 +9,7 @@ import type { Content, WatchStatus } from '@/types'
 interface ContentCardProps {
   content: Content
   userStatus?: WatchStatus
-  onAddToList?: (contentId: string, status: WatchStatus) => void
+  onAddToList?: (status: WatchStatus) => void
   showQuickActions?: boolean
 }
 
@@ -52,7 +52,7 @@ export function ContentCard({
     e.preventDefault()
     e.stopPropagation()
     if (onAddToList) {
-      onAddToList(content.id, status)
+      onAddToList(status)
       setIsInList(true)
     }
   }

@@ -39,8 +39,13 @@ export function useAddToList() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ contentId, status }: { contentId: string; status: WatchStatus }) =>
-      contentService.addToList(contentId, status),
+    mutationFn: ({
+      content,
+      status,
+    }: {
+      content: { externalId: string; type: ContentType; title: string; posterPath?: string }
+      status: WatchStatus
+    }) => contentService.addToList(content, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userContent'] })
       queryClient.invalidateQueries({ queryKey: ['userStats'] })
