@@ -110,6 +110,10 @@ export interface Content {
   episodeCount?: number
   seasonCount?: number
   status?: string
+  productionCompanies?: string[]
+  studios?: string[]
+  originalLanguage?: string
+  popularity?: number
 }
 
 export interface Genre {
@@ -176,6 +180,25 @@ export interface TMDBTVShow {
   number_of_episodes?: number
   number_of_seasons?: number
   status?: string
+}
+
+// Types for detailed responses (when fetching by ID)
+export interface TMDBMovieDetails extends Omit<TMDBMovie, 'genre_ids'> {
+  genres: Genre[]
+  runtime: number
+  status?: string
+  tagline?: string
+  production_companies?: Array<{ id: number; name: string }>
+  original_language?: string
+  popularity?: number
+}
+
+export interface TMDBTVShowDetails extends Omit<TMDBTVShow, 'genre_ids'> {
+  genres: Genre[]
+  episode_run_time?: number[]
+  production_companies?: Array<{ id: number; name: string }>
+  original_language?: string
+  popularity?: number
 }
 
 // Jikan Types
