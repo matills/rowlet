@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Star, Plus, Check } from 'lucide-react'
+import { Star, Plus, Check, Eye, Clock, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Card, Badge, Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
@@ -100,48 +100,60 @@ export function ContentCard({
               {typeLabels[content.type]}
             </Badge>
 
-            {/* Content info on hover */}
-            <motion.div
-              className="absolute bottom-0 left-0 right-0 p-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3 className="line-clamp-2 text-sm font-bold text-white">
-                {content.title}
-              </h3>
-              {content.releaseDate && (
-                <p className="mt-1 text-xs text-gray-300">
-                  {new Date(content.releaseDate).getFullYear()}
-                </p>
-              )}
-
-              {/* Add to list button on hover */}
-              {showQuickActions && onAddToList && (
-                <div className="mt-3">
-                  {isInList || userStatus ? (
+            {/* Quick actions on hover */}
+            {showQuickActions && onAddToList && (
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 p-3 space-y-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isInList || userStatus ? (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="w-full gap-2"
+                    disabled
+                  >
+                    <Check className="h-3.5 w-3.5" />
+                    En mi lista
+                  </Button>
+                ) : (
+                  <div className="grid grid-cols-3 gap-1.5">
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="w-full gap-2"
-                      disabled
+                      className="gap-1.5 px-2 text-xs h-8"
+                      onClick={(e) => handleAddToList(e, 'watching')}
+                      title="Viendo"
                     >
-                      <Check className="h-4 w-4" />
-                      En mi lista
+                      <Eye className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">Viendo</span>
                     </Button>
-                  ) : (
                     <Button
                       size="sm"
-                      className="w-full gap-2"
-                      onClick={(e) => handleAddToList(e, 'plan_to_watch')}
+                      variant="secondary"
+                      className="gap-1.5 px-2 text-xs h-8"
+                      onClick={(e) => handleAddToList(e, 'completed')}
+                      title="Completado"
                     >
-                      <Plus className="h-4 w-4" />
-                      Agregar
+                      <CheckCircle className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">Visto</span>
                     </Button>
-                  )}
-                </div>
-              )}
-            </motion.div>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="gap-1.5 px-2 text-xs h-8"
+                      onClick={(e) => handleAddToList(e, 'plan_to_watch')}
+                      title="Ver más tarde"
+                    >
+                      <Clock className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">Luego</span>
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            )}
 
             {/* User Status Badge */}
             {userStatus && !isHovered && (
@@ -166,11 +178,8 @@ export function ContentCard({
           </div>
         </Link>
 
-        {/* Card content below image - visible when not hovered */}
-        <div className={cn(
-          "p-3 transition-opacity duration-300",
-          isHovered ? "opacity-0" : "opacity-100"
-        )}>
+        {/* Card content below image - always visible */}
+        <div className="p-3">
           <h3 className="line-clamp-1 text-sm font-medium group-hover:text-primary transition-colors">
             {content.title}
           </h3>

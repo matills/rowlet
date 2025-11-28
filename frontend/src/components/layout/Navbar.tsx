@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Search, Bell, Menu, Sun, Moon, LogOut, User, Settings, BarChart3 } from 'lucide-react'
 import { Button, Avatar, AvatarImage, AvatarFallback, OwlLogo } from '@/components/ui'
+import { SearchBar } from '@/components/content'
 import { useAuth } from '@/hooks'
 import { useThemeStore } from '@/stores'
 import { cn } from '@/lib/utils'
@@ -55,13 +56,10 @@ export function Navbar({ onMenuClick }: NavbarProps) {
 
         {/* Center - Search (desktop) */}
         <div className="hidden flex-1 justify-center md:flex min-w-0">
-          <Link
-            to="/search"
-            className="flex w-full max-w-md items-center gap-2 rounded-full border bg-muted/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted min-w-0"
-          >
-            <Search className="h-4 w-4 shrink-0" />
-            <span className="truncate">Buscar películas, series, anime...</span>
-          </Link>
+          <SearchBar
+            className="w-full max-w-md"
+            placeholder="Buscar películas, series, anime..."
+          />
         </div>
 
         {/* Right side - Actions */}
