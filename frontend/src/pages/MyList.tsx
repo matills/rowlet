@@ -20,11 +20,15 @@ export function MyListPage() {
   const [activeTab, setActiveTab] = useState<WatchStatus | 'all'>('all')
   const { isAuthenticated } = useAuth()
 
-  const { data: userContent, isLoading } = useUserContent(
-    activeTab === 'all' ? undefined : activeTab
-  )
+  // Fetch ALL user content (no filter) so we can calculate counts correctly
+  const { data: allUserContent, isLoading } = useUserContent()
 
   const updateContent = useUpdateUserContent()
+
+  // Filter content based on active tab (client-side filtering)
+  const userContent = activeTab === 'all'
+    ? allUserContent
+    : allUserContent?.filter(uc => uc.status === activeTab)
 
   if (!isAuthenticated) {
     return (
@@ -60,15 +64,15 @@ export function MyListPage() {
     userContentId: uc.id,
   })) || []
 
-  const userContentStatus = userContent?.reduce((acc, uc) => {
+  const userContentStatus = allUserContent?.reduce((acc, uc) => {
     acc[uc.content.id] = uc.status
     return acc
   }, {} as Record<string, WatchStatus>) || {}
 
-  const watchingCount = userContent?.filter((c) => c.status === 'watching').length || 0
-  const completedCount = userContent?.filter((c) => c.status === 'completed').length || 0
-  const plannedCount = userContent?.filter((c) => c.status === 'plan_to_watch').length || 0
-  const totalCount = userContent?.length || 0
+  const watchingCount = allUserContent?.filter((c) => c.status === 'watching').length || 0
+  const completedCount = allUserContent?.filter((c) => c.status === 'completed').length || 0
+  const plannedCount = allUserContent?.filter((c) => c.status === 'plan_to_watch').length || 0
+  const totalCount = allUserContent?.length || 0
 
   return (
     <div className="space-y-8">
@@ -124,7 +128,7 @@ export function MyListPage() {
             const Icon = tab.icon
             const count = tab.value === 'all'
               ? totalCount
-              : userContent?.filter((c) => c.status === tab.value).length || 0
+              : allUserContent?.filter((c) => c.status === tab.value).length || 0
 
             return (
               <TabsTrigger
@@ -174,7 +178,7 @@ export function MyListPage() {
                   isLoading={isLoading}
                   userContentStatus={userContentStatus}
                   onAddToList={(content, status) => {
-                    const userContentItem = userContent?.find(
+                    const userContentItem = allUserContent?.find(
                       (uc) => uc.content.id === content.id
                     )
                     if (userContentItem) {
