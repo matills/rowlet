@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { authService } from '@/services'
 import { useAuthStore } from '@/stores'
@@ -10,16 +11,32 @@ export function useAuth() {
   const profileQuery = useQuery({
     queryKey: ['profile'],
     queryFn: authService.getProfile,
-    enabled: !!token,
-    onSuccess: (data) => {
-      setUser(data)
+    enabled: !!token && !user,
+    retry: 1,
+  })
+
+  // Initialize auth state on mount
+  useEffect(() => {
+    if (user && token) {
+      // User data is already loaded from localStorage
       setLoading(false)
-    },
-    onError: () => {
+    } else if (!token) {
+      // No token, user is not authenticated
+      setLoading(false)
+    }
+    // If token exists but no user, profileQuery will fetch it
+  }, [])
+
+  // Update user state when profile query succeeds or fails
+  useEffect(() => {
+    if (profileQuery.isSuccess && profileQuery.data) {
+      setUser(profileQuery.data)
+      setLoading(false)
+    } else if (profileQuery.isError) {
       logout()
       setLoading(false)
-    },
-  })
+    }
+  }, [profileQuery.isSuccess, profileQuery.isError, profileQuery.data, setUser, setLoading, logout])
 
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginCredentials) => authService.login(credentials),
