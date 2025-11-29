@@ -151,32 +151,29 @@ export function ContentCard({
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="gap-1.5 px-2 text-xs h-8"
+                      className="px-3 h-8"
                       onClick={(e) => handleAddToList(e, 'watching')}
                       title="Viendo"
                     >
-                      <Eye className="h-3.5 w-3.5" />
-                      <span className="hidden sm:inline">Viendo</span>
+                      <Eye className="h-4 w-4" />
                     </Button>
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="gap-1.5 px-2 text-xs h-8"
+                      className="px-3 h-8"
                       onClick={(e) => handleAddToList(e, 'completed')}
-                      title="Completado"
+                      title="Visto"
                     >
-                      <CheckCircle className="h-3.5 w-3.5" />
-                      <span className="hidden sm:inline">Visto</span>
+                      <CheckCircle className="h-4 w-4" />
                     </Button>
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="gap-1.5 px-2 text-xs h-8"
+                      className="px-3 h-8"
                       onClick={(e) => handleAddToList(e, 'plan_to_watch')}
-                      title="Ver más tarde"
+                      title="Luego"
                     >
-                      <Clock className="h-3.5 w-3.5" />
-                      <span className="hidden sm:inline">Luego</span>
+                      <Clock className="h-4 w-4" />
                     </Button>
                   </div>
                 )}

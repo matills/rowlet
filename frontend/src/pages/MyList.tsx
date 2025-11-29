@@ -87,13 +87,14 @@ export function MyListPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold md:text-3xl">Mi Lista</h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground sm:text-base">
             Administra y organiza todo tu contenido
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2 w-full sm:w-auto">
           <Plus className="h-4 w-4" />
-          Crear Lista Personalizada
+          <span className="hidden xs:inline">Crear Lista Personalizada</span>
+          <span className="xs:hidden">Nueva Lista</span>
         </Button>
       </div>
 
@@ -130,7 +131,7 @@ export function MyListPage() {
         value={activeTab}
         onValueChange={(value) => setActiveTab(value as WatchStatus | 'all')}
       >
-        <TabsList className="flex-wrap justify-start gap-1 bg-transparent p-0">
+        <TabsList className="flex-wrap justify-start gap-1.5 bg-transparent p-0">
           {statusTabs.map((tab) => {
             const Icon = tab.icon
             const count = tab.value === 'all'
@@ -141,11 +142,11 @@ export function MyListPage() {
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-2 rounded-full px-4"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5 rounded-full px-3 py-2 text-sm sm:gap-2 sm:px-4"
               >
-                <Icon className="h-4 w-4" />
-                {tab.label}
-                <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground data-[state=active]:bg-primary-foreground/20 data-[state=active]:text-primary-foreground">
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="hidden xs:inline">{tab.label}</span>
+                <span className="rounded-full bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground data-[state=active]:bg-primary-foreground/20 data-[state=active]:text-primary-foreground sm:px-2">
                   {count}
                 </span>
               </TabsTrigger>
