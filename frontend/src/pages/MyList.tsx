@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Plus, Eye, CheckCircle, Clock, Pause, XCircle, List } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Button, Tabs, TabsList, TabsTrigger, TabsContent, Card, CardContent } from '@/components/ui'
+import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui'
 import { ContentGrid, StatCard } from '@/components/content'
 import { useUserContent, useUpdateUserContent, useRemoveFromList, useAuth } from '@/hooks'
 import type { WatchStatus } from '@/types'
@@ -64,12 +64,33 @@ export function MyListPage() {
   const content = userContent
     ?.filter((uc) => {
       // Ensure all required fields are present
-      return uc.content && uc.content.id && uc.content.externalId && uc.content.type
+      // Backend returns snake_case, so we check both formats
+      const content = uc.content as any
+      return uc.content && content.id && (content.externalId || content.external_id) && content.type
     })
-    .map((uc) => ({
-      ...uc.content,
-      userContentId: uc.id,
-    })) || []
+    .map((uc) => {
+      // Transform snake_case to camelCase for consistency
+      const dbContent = uc.content as any
+      return {
+        id: dbContent.id,
+        externalId: dbContent.external_id || dbContent.externalId,
+        type: dbContent.type,
+        title: dbContent.title,
+        originalTitle: dbContent.original_title || dbContent.originalTitle,
+        posterPath: dbContent.poster_path || dbContent.posterPath,
+        backdropPath: dbContent.backdrop_path || dbContent.backdropPath,
+        overview: dbContent.overview,
+        releaseDate: dbContent.release_date || dbContent.releaseDate,
+        genres: dbContent.genres || [],
+        rating: dbContent.rating,
+        voteCount: dbContent.vote_count || dbContent.voteCount,
+        runtime: dbContent.runtime,
+        episodeCount: dbContent.episode_count || dbContent.episodeCount,
+        seasonCount: dbContent.season_count || dbContent.seasonCount,
+        status: dbContent.status,
+        userContentId: uc.id,
+      }
+    }) || []
 
   const userContentStatus = allUserContent?.reduce((acc, uc) => {
     acc[uc.content.id] = uc.status

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Star, Plus, Check, Eye, Clock, CheckCircle, X } from 'lucide-react'
+import { Star, Check, Eye, Clock, CheckCircle, X, Heart } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Card, Badge, Button } from '@/components/ui'
+import { ContentCardMenu } from './ContentCardMenu'
 import { cn } from '@/lib/utils'
 import type { Content, WatchStatus } from '@/types'
 
@@ -12,6 +13,9 @@ interface ContentCardProps {
   onAddToList?: (status: WatchStatus) => void
   onRemoveFromList?: () => void
   showQuickActions?: boolean
+  onToggleLike?: () => void
+  isLiked?: boolean
+  onMarkAsWatched?: () => void
 }
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500'
@@ -42,9 +46,13 @@ export function ContentCard({
   onAddToList,
   onRemoveFromList,
   showQuickActions = true,
+  onToggleLike,
+  isLiked = false,
+  onMarkAsWatched,
 }: ContentCardProps) {
   const [isInList, setIsInList] = useState(!!userStatus)
   const [isHovered, setIsHovered] = useState(false)
+  const [liked, setLiked] = useState(isLiked)
 
   // Check if posterPath is a full URL (for anime from Jikan) or a path (for TMDB)
   const imageUrl = content.posterPath
@@ -68,6 +76,19 @@ export function ContentCard({
     if (onRemoveFromList) {
       onRemoveFromList()
     }
+  }
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setLiked(!liked)
+    onToggleLike?.()
+  }
+
+  const handleMarkWatched = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onMarkAsWatched?.()
   }
 
   // Validate that we have the required data for the link
@@ -98,27 +119,64 @@ export function ContentCard({
               isHovered ? "opacity-100" : "opacity-0"
             )} />
 
-            {/* Remove button - visible on hover when in list */}
-            {onRemoveFromList && (
-              <motion.button
-                onClick={handleRemove}
-                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-red-500/90 text-white backdrop-blur-sm transition-colors hover:bg-red-600"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.8 }}
-                transition={{ duration: 0.2 }}
-                title="Quitar de mi lista"
-              >
-                <X className="h-4 w-4" />
-              </motion.button>
-            )}
+            {/* Action icons - top right */}
+            <div className="absolute right-2 top-2 z-10 flex flex-col gap-1.5">
+              {/* Remove button - visible on hover when in list */}
+              {onRemoveFromList && (
+                <motion.button
+                  onClick={handleRemove}
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-red-500/90 text-white backdrop-blur-sm transition-colors hover:bg-red-600"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  title="Quitar de mi lista"
+                >
+                  <X className="h-4 w-4" />
+                </motion.button>
+              )}
 
-            {/* Rating Badge - Always visible */}
-            {content.rating && !onRemoveFromList && (
-              <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm">
-                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                <span className="font-medium">{content.rating.toFixed(1)}</span>
+              {/* Rating Badge - When not in list */}
+              {content.rating && !onRemoveFromList && (
+                <div className="flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm">
+                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                  <span className="font-medium">{content.rating.toFixed(1)}</span>
+                </div>
+              )}
+
+              {/* Quick action icons - always visible */}
+              <motion.button
+                onClick={handleMarkWatched}
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white backdrop-blur-sm transition-colors hover:bg-black/90"
+                title="Marcar como visto"
+              >
+                <Eye className="h-4 w-4" />
+              </motion.button>
+
+              <motion.button
+                onClick={handleLike}
+                className={cn(
+                  "flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-sm transition-colors",
+                  liked
+                    ? "bg-red-500/90 text-white hover:bg-red-600"
+                    : "bg-black/70 text-white hover:bg-black/90"
+                )}
+                title="Me gusta"
+              >
+                <Heart className={cn("h-4 w-4", liked && "fill-current")} />
+              </motion.button>
+
+              {/* Menu de opciones */}
+              <div className="relative">
+                <ContentCardMenu
+                  onAddToList={() => console.log('Add to list')}
+                  onAddToWatchlist={() => console.log('Add to watchlist')}
+                  onShowInLists={() => console.log('Show in lists')}
+                  onWhereToWatch={() => console.log('Where to watch')}
+                  onReview={() => console.log('Review')}
+                  onShowActivity={() => console.log('Show activity')}
+                />
               </div>
-            )}
+            </div>
 
             {/* Type Badge - Always visible */}
             <Badge

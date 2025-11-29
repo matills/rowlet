@@ -1,5 +1,6 @@
 export { ContentCard } from './ContentCard'
 export { ContentGrid } from './ContentGrid'
+export { ContentCardMenu } from './ContentCardMenu'
 export { SearchBar } from './SearchBar'
 export { SearchFilters, type FilterOptions } from './SearchFilters'
 export { StatusSelector } from './StatusSelector'
