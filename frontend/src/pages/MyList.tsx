@@ -4,7 +4,7 @@ import { Plus, Eye, CheckCircle, Clock, Pause, XCircle, List } from 'lucide-reac
 import { motion } from 'framer-motion'
 import { Button, Tabs, TabsList, TabsTrigger, TabsContent, Card, CardContent } from '@/components/ui'
 import { ContentGrid, StatCard } from '@/components/content'
-import { useUserContent, useUpdateUserContent, useAuth } from '@/hooks'
+import { useUserContent, useUpdateUserContent, useRemoveFromList, useAuth } from '@/hooks'
 import type { WatchStatus } from '@/types'
 
 const statusTabs: Array<{ value: WatchStatus | 'all'; label: string; icon: typeof Eye }> = [
@@ -24,6 +24,7 @@ export function MyListPage() {
   const { data: allUserContent, isLoading } = useUserContent()
 
   const updateContent = useUpdateUserContent()
+  const removeFromList = useRemoveFromList()
 
   // Filter content based on active tab (client-side filtering)
   const userContent = activeTab === 'all'
@@ -59,10 +60,16 @@ export function MyListPage() {
     )
   }
 
-  const content = userContent?.map((uc) => ({
-    ...uc.content,
-    userContentId: uc.id,
-  })) || []
+  // Map user content to content items, filtering out any with missing required data
+  const content = userContent
+    ?.filter((uc) => {
+      // Ensure all required fields are present
+      return uc.content && uc.content.id && uc.content.externalId && uc.content.type
+    })
+    .map((uc) => ({
+      ...uc.content,
+      userContentId: uc.id,
+    })) || []
 
   const userContentStatus = allUserContent?.reduce((acc, uc) => {
     acc[uc.content.id] = uc.status
@@ -186,6 +193,14 @@ export function MyListPage() {
                         userContentId: userContentItem.id,
                         updates: { status },
                       })
+                    }
+                  }}
+                  onRemoveFromList={(content) => {
+                    const userContentItem = allUserContent?.find(
+                      (uc) => uc.content.id === content.id
+                    )
+                    if (userContentItem) {
+                      removeFromList.mutate(userContentItem.id)
                     }
                   }}
                 />

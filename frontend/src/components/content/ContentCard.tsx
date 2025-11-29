@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Star, Plus, Check, Eye, Clock, CheckCircle } from 'lucide-react'
+import { Star, Plus, Check, Eye, Clock, CheckCircle, X } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Card, Badge, Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
@@ -10,6 +10,7 @@ interface ContentCardProps {
   content: Content
   userStatus?: WatchStatus
   onAddToList?: (status: WatchStatus) => void
+  onRemoveFromList?: () => void
   showQuickActions?: boolean
 }
 
@@ -39,6 +40,7 @@ export function ContentCard({
   content,
   userStatus,
   onAddToList,
+  onRemoveFromList,
   showQuickActions = true,
 }: ContentCardProps) {
   const [isInList, setIsInList] = useState(!!userStatus)
@@ -60,6 +62,18 @@ export function ContentCard({
     }
   }
 
+  const handleRemove = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (onRemoveFromList) {
+      onRemoveFromList()
+    }
+  }
+
+  // Validate that we have the required data for the link
+  const hasValidLink = content.type && content.externalId
+  const linkPath = hasValidLink ? `/${content.type}/${content.externalId}` : '#'
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -69,7 +83,7 @@ export function ContentCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card className="group relative overflow-hidden card-hover">
-        <Link to={`/${content.type}/${content.externalId}`}>
+        <Link to={linkPath} onClick={(e) => !hasValidLink && e.preventDefault()}>
           <div className="relative aspect-[2/3] overflow-hidden">
             <img
               src={imageUrl}
@@ -84,18 +98,32 @@ export function ContentCard({
               isHovered ? "opacity-100" : "opacity-0"
             )} />
 
+            {/* Remove button - visible on hover when in list */}
+            {onRemoveFromList && (
+              <motion.button
+                onClick={handleRemove}
+                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-red-500/90 text-white backdrop-blur-sm transition-colors hover:bg-red-600"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.8 }}
+                transition={{ duration: 0.2 }}
+                title="Quitar de mi lista"
+              >
+                <X className="h-4 w-4" />
+              </motion.button>
+            )}
+
             {/* Rating Badge - Always visible */}
-            {content.rating && (
+            {content.rating && !onRemoveFromList && (
               <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm">
                 <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                 <span className="font-medium">{content.rating.toFixed(1)}</span>
               </div>
             )}
 
-            {/* Type Badge */}
+            {/* Type Badge - Always visible */}
             <Badge
               variant={typeVariants[content.type]}
-              className="absolute left-2 top-2"
+              className="absolute left-2 top-2 z-10"
             >
               {typeLabels[content.type]}
             </Badge>
