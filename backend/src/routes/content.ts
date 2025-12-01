@@ -33,17 +33,29 @@ contentRouter.get('/search', async (req, res, next) => {
         jikanService.searchAnime(query, page),
       ])
 
-      const allContent = [
-        ...movies.data,
-        ...tvShows.data,
-        ...anime.data,
-      ].sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      // Deduplicate content by normalizing titles
+      const seenTitles = new Set<string>()
+      const allContent: Content[] = []
+
+      const normalizeTitle = (title: string) =>
+        title.toLowerCase().replace(/[^a-z0-9]/g, '')
+
+      // Add all content while checking for duplicates
+      for (const item of [...movies.data, ...tvShows.data, ...anime.data]) {
+        const normalizedTitle = normalizeTitle(item.title)
+        if (!seenTitles.has(normalizedTitle)) {
+          seenTitles.add(normalizedTitle)
+          allContent.push(item)
+        }
+      }
+
+      allContent.sort((a, b) => (b.rating || 0) - (a.rating || 0))
 
       results = {
         data: allContent,
         page,
         totalPages: Math.max(movies.totalPages, tvShows.totalPages, anime.totalPages),
-        totalResults: movies.totalResults + tvShows.totalResults + anime.totalResults,
+        totalResults: allContent.length,
       }
     }
 
@@ -100,22 +112,37 @@ contentRouter.get('/trending', async (req, res, next) => {
       return res.json(results)
     }
 
-    // Return all trending
+    // Return all trending with deduplication
     const [movies, tvShows, anime] = await Promise.all([
       tmdbService.getTrendingMovies(Number(page)),
       tmdbService.getTrendingTV(Number(page)),
       jikanService.getTopAnime(Number(page)),
     ])
 
+    // Deduplicate trending content
+    const seenTitles = new Set<string>()
+    const trendingContent: Content[] = []
+
+    const normalizeTitle = (title: string) =>
+      title.toLowerCase().replace(/[^a-z0-9]/g, '')
+
+    for (const item of [
+      ...movies.data.slice(0, 6),
+      ...tvShows.data.slice(0, 6),
+      ...anime.data.slice(0, 6),
+    ]) {
+      const normalizedTitle = normalizeTitle(item.title)
+      if (!seenTitles.has(normalizedTitle)) {
+        seenTitles.add(normalizedTitle)
+        trendingContent.push(item)
+      }
+    }
+
     res.json({
-      data: [
-        ...movies.data.slice(0, 6),
-        ...tvShows.data.slice(0, 6),
-        ...anime.data.slice(0, 6),
-      ],
+      data: trendingContent,
       page: Number(page),
       totalPages: Math.max(movies.totalPages, tvShows.totalPages, anime.totalPages),
-      totalResults: movies.totalResults + tvShows.totalResults + anime.totalResults,
+      totalResults: trendingContent.length,
     })
   } catch (error) {
     next(error)

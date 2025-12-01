@@ -9,8 +9,13 @@ import {
   LoginPage,
   RegisterPage,
   ProfilePage,
+  ProfileSettingsPage,
   StatsPage,
+  WrappedPage,
   GoogleCallbackPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  ContentDetailsPage,
 } from '@/pages'
 import { useThemeStore } from '@/stores'
 import './index.css'
@@ -60,10 +65,15 @@ function App() {
               <Route path="anime" element={<SearchPage />} />
               <Route path="my-list" element={<MyListPage />} />
               <Route path="profile" element={<ProfilePage />} />
+              <Route path="profile/settings" element={<ProfileSettingsPage />} />
               <Route path="stats" element={<StatsPage />} />
+              <Route path="wrapped" element={<WrappedPage />} />
+              <Route path=":type/:id" element={<ContentDetailsPage />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/auth/callback" element={<GoogleCallbackPage />} />
           </Routes>
         </BrowserRouter>

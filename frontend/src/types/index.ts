@@ -20,6 +20,10 @@ export interface Content {
   episodeCount?: number // for series/anime
   seasonCount?: number
   status?: string // "Released", "Ongoing", "Ended", etc.
+  studios?: string[] // for anime
+  productionCompanies?: string[] // for movies/tv
+  originalLanguage?: string
+  popularity?: number
 }
 
 export interface Genre {
@@ -169,6 +173,9 @@ export interface SearchFilters {
   type?: ContentType
   genre?: number
   year?: number
+  minRating?: number
+  sortBy?: 'popularity' | 'rating' | 'year' | 'title'
+  sortOrder?: 'asc' | 'desc'
   page?: number
 }
 

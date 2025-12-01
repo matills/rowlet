@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Star, Plus, Check } from 'lucide-react'
+import { Star, Check, Eye, Clock, CheckCircle, X, Heart } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Card, Badge, Button } from '@/components/ui'
+import { ContentCardMenu } from './ContentCardMenu'
 import { cn } from '@/lib/utils'
 import type { Content, WatchStatus } from '@/types'
 
@@ -10,7 +11,11 @@ interface ContentCardProps {
   content: Content
   userStatus?: WatchStatus
   onAddToList?: (status: WatchStatus) => void
+  onRemoveFromList?: () => void
   showQuickActions?: boolean
+  onToggleLike?: () => void
+  isLiked?: boolean
+  onMarkAsWatched?: () => void
 }
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500'
@@ -39,13 +44,21 @@ export function ContentCard({
   content,
   userStatus,
   onAddToList,
+  onRemoveFromList,
   showQuickActions = true,
+  onToggleLike,
+  isLiked = false,
+  onMarkAsWatched,
 }: ContentCardProps) {
   const [isInList, setIsInList] = useState(!!userStatus)
   const [isHovered, setIsHovered] = useState(false)
+  const [liked, setLiked] = useState(isLiked)
 
+  // Check if posterPath is a full URL (for anime from Jikan) or a path (for TMDB)
   const imageUrl = content.posterPath
-    ? `${TMDB_IMAGE_BASE}${content.posterPath}`
+    ? content.posterPath.startsWith('http')
+      ? content.posterPath
+      : `${TMDB_IMAGE_BASE}${content.posterPath}`
     : '/placeholder-poster.jpg'
 
   const handleAddToList = (e: React.MouseEvent, status: WatchStatus) => {
@@ -57,6 +70,31 @@ export function ContentCard({
     }
   }
 
+  const handleRemove = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (onRemoveFromList) {
+      onRemoveFromList()
+    }
+  }
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setLiked(!liked)
+    onToggleLike?.()
+  }
+
+  const handleMarkWatched = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onMarkAsWatched?.()
+  }
+
+  // Validate that we have the required data for the link
+  const hasValidLink = content.type && content.externalId
+  const linkPath = hasValidLink ? `/${content.type}/${content.externalId}` : '#'
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -66,7 +104,7 @@ export function ContentCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card className="group relative overflow-hidden card-hover">
-        <Link to={`/${content.type}/${content.externalId}`}>
+        <Link to={linkPath} onClick={(e) => !hasValidLink && e.preventDefault()}>
           <div className="relative aspect-[2/3] overflow-hidden">
             <img
               src={imageUrl}
@@ -81,64 +119,124 @@ export function ContentCard({
               isHovered ? "opacity-100" : "opacity-0"
             )} />
 
-            {/* Rating Badge - Always visible */}
-            {content.rating && (
-              <div className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm">
-                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                <span className="font-medium">{content.rating.toFixed(1)}</span>
-              </div>
-            )}
+            {/* Action icons - top right */}
+            <div className="absolute right-2 top-2 z-10 flex flex-col gap-1.5">
+              {/* Remove button - visible on hover when in list */}
+              {onRemoveFromList && (
+                <motion.button
+                  onClick={handleRemove}
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-red-500/90 text-white backdrop-blur-sm transition-colors hover:bg-red-600"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: isHovered ? 1 : 0, scale: isHovered ? 1 : 0.8 }}
+                  transition={{ duration: 0.2 }}
+                  title="Quitar de mi lista"
+                >
+                  <X className="h-4 w-4" />
+                </motion.button>
+              )}
 
-            {/* Type Badge */}
+              {/* Rating Badge - When not in list */}
+              {content.rating && !onRemoveFromList && (
+                <div className="flex items-center gap-1 rounded-full bg-black/70 px-2 py-1 text-xs text-white backdrop-blur-sm">
+                  <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                  <span className="font-medium">{content.rating.toFixed(1)}</span>
+                </div>
+              )}
+
+              {/* Quick action icons - always visible */}
+              <motion.button
+                onClick={handleMarkWatched}
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white backdrop-blur-sm transition-colors hover:bg-black/90"
+                title="Marcar como visto"
+              >
+                <Eye className="h-4 w-4" />
+              </motion.button>
+
+              <motion.button
+                onClick={handleLike}
+                className={cn(
+                  "flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-sm transition-colors",
+                  liked
+                    ? "bg-red-500/90 text-white hover:bg-red-600"
+                    : "bg-black/70 text-white hover:bg-black/90"
+                )}
+                title="Me gusta"
+              >
+                <Heart className={cn("h-4 w-4", liked && "fill-current")} />
+              </motion.button>
+
+              {/* Menu de opciones */}
+              <div className="relative">
+                <ContentCardMenu
+                  onAddToList={() => console.log('Add to list')}
+                  onAddToWatchlist={() => console.log('Add to watchlist')}
+                  onShowInLists={() => console.log('Show in lists')}
+                  onWhereToWatch={() => console.log('Where to watch')}
+                  onReview={() => console.log('Review')}
+                  onShowActivity={() => console.log('Show activity')}
+                />
+              </div>
+            </div>
+
+            {/* Type Badge - Always visible */}
             <Badge
               variant={typeVariants[content.type]}
-              className="absolute left-2 top-2"
+              className="absolute left-2 top-2 z-10"
             >
               {typeLabels[content.type]}
             </Badge>
 
-            {/* Content info on hover */}
-            <motion.div
-              className="absolute bottom-0 left-0 right-0 p-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3 className="line-clamp-2 text-sm font-bold text-white">
-                {content.title}
-              </h3>
-              {content.releaseDate && (
-                <p className="mt-1 text-xs text-gray-300">
-                  {new Date(content.releaseDate).getFullYear()}
-                </p>
-              )}
-
-              {/* Add to list button on hover */}
-              {showQuickActions && onAddToList && (
-                <div className="mt-3">
-                  {isInList || userStatus ? (
+            {/* Quick actions on hover */}
+            {showQuickActions && onAddToList && (
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 p-3 space-y-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isInList || userStatus ? (
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="w-full gap-2"
+                    disabled
+                  >
+                    <Check className="h-3.5 w-3.5" />
+                    En mi lista
+                  </Button>
+                ) : (
+                  <div className="grid grid-cols-3 gap-1.5">
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="w-full gap-2"
-                      disabled
+                      className="px-3 h-8"
+                      onClick={(e) => handleAddToList(e, 'watching')}
+                      title="Viendo"
                     >
-                      <Check className="h-4 w-4" />
-                      En mi lista
+                      <Eye className="h-4 w-4" />
                     </Button>
-                  ) : (
                     <Button
                       size="sm"
-                      className="w-full gap-2"
-                      onClick={(e) => handleAddToList(e, 'plan_to_watch')}
+                      variant="secondary"
+                      className="px-3 h-8"
+                      onClick={(e) => handleAddToList(e, 'completed')}
+                      title="Visto"
                     >
-                      <Plus className="h-4 w-4" />
-                      Agregar
+                      <CheckCircle className="h-4 w-4" />
                     </Button>
-                  )}
-                </div>
-              )}
-            </motion.div>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="px-3 h-8"
+                      onClick={(e) => handleAddToList(e, 'plan_to_watch')}
+                      title="Luego"
+                    >
+                      <Clock className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            )}
 
             {/* User Status Badge */}
             {userStatus && !isHovered && (
@@ -163,11 +261,8 @@ export function ContentCard({
           </div>
         </Link>
 
-        {/* Card content below image - visible when not hovered */}
-        <div className={cn(
-          "p-3 transition-opacity duration-300",
-          isHovered ? "opacity-0" : "opacity-100"
-        )}>
+        {/* Card content below image - always visible */}
+        <div className="p-3">
           <h3 className="line-clamp-1 text-sm font-medium group-hover:text-primary transition-colors">
             {content.title}
           </h3>

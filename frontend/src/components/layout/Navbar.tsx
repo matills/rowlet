@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Search, Bell, Menu, Sun, Moon, LogOut, User, Settings, BarChart3 } from 'lucide-react'
 import { Button, Avatar, AvatarImage, AvatarFallback, OwlLogo } from '@/components/ui'
+import { SearchBar } from '@/components/content'
 import { useAuth } from '@/hooks'
 import { useThemeStore } from '@/stores'
 import { cn } from '@/lib/utils'
@@ -34,9 +35,9 @@ export function Navbar({ onMenuClick }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="flex h-16 items-center justify-between gap-2 px-4 md:gap-4 md:px-6">
         {/* Left side - Menu button (mobile) */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
           <Button
             variant="ghost"
             size="icon"
@@ -54,18 +55,15 @@ export function Navbar({ onMenuClick }: NavbarProps) {
         </div>
 
         {/* Center - Search (desktop) */}
-        <div className="hidden flex-1 justify-center md:flex">
-          <Link
-            to="/search"
-            className="flex w-full max-w-md items-center gap-2 rounded-full border bg-muted/50 px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted"
-          >
-            <Search className="h-4 w-4" />
-            <span>Buscar películas, series, anime...</span>
-          </Link>
+        <div className="hidden flex-1 justify-center md:flex min-w-0">
+          <SearchBar
+            className="w-full max-w-md"
+            placeholder="Buscar películas, series, anime..."
+          />
         </div>
 
         {/* Right side - Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Search button (mobile) */}
           <Link to="/search" className="md:hidden">
             <Button variant="ghost" size="icon">

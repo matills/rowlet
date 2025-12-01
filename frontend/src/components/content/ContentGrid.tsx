@@ -6,6 +6,7 @@ interface ContentGridProps {
   content: Content[]
   isLoading?: boolean
   onAddToList?: (content: Content, status: WatchStatus) => void
+  onRemoveFromList?: (content: Content) => void
   userContentStatus?: Record<string, WatchStatus>
 }
 
@@ -13,6 +14,7 @@ export function ContentGrid({
   content,
   isLoading,
   onAddToList,
+  onRemoveFromList,
   userContentStatus = {},
 }: ContentGridProps) {
   if (isLoading) {
@@ -45,6 +47,7 @@ export function ContentGrid({
           content={item}
           userStatus={userContentStatus[item.id]}
           onAddToList={onAddToList ? (status) => onAddToList(item, status) : undefined}
+          onRemoveFromList={onRemoveFromList ? () => onRemoveFromList(item) : undefined}
         />
       ))}
     </div>

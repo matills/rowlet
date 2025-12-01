@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Plus, Eye, CheckCircle, Clock, Pause, XCircle, List } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Button, Tabs, TabsList, TabsTrigger, TabsContent, Card, CardContent } from '@/components/ui'
+import { Button, Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui'
 import { ContentGrid, StatCard } from '@/components/content'
-import { useUserContent, useUpdateUserContent, useAuth } from '@/hooks'
+import { useUserContent, useUpdateUserContent, useRemoveFromList, useAuth } from '@/hooks'
 import type { WatchStatus } from '@/types'
 
 const statusTabs: Array<{ value: WatchStatus | 'all'; label: string; icon: typeof Eye }> = [
@@ -20,11 +20,16 @@ export function MyListPage() {
   const [activeTab, setActiveTab] = useState<WatchStatus | 'all'>('all')
   const { isAuthenticated } = useAuth()
 
-  const { data: userContent, isLoading } = useUserContent(
-    activeTab === 'all' ? undefined : activeTab
-  )
+  // Fetch ALL user content (no filter) so we can calculate counts correctly
+  const { data: allUserContent, isLoading } = useUserContent()
 
   const updateContent = useUpdateUserContent()
+  const removeFromList = useRemoveFromList()
+
+  // Filter content based on active tab (client-side filtering)
+  const userContent = activeTab === 'all'
+    ? allUserContent
+    : allUserContent?.filter(uc => uc.status === activeTab)
 
   if (!isAuthenticated) {
     return (
@@ -55,20 +60,47 @@ export function MyListPage() {
     )
   }
 
-  const content = userContent?.map((uc) => ({
-    ...uc.content,
-    userContentId: uc.id,
-  })) || []
+  // Map user content to content items, filtering out any with missing required data
+  const content = userContent
+    ?.filter((uc) => {
+      // Ensure all required fields are present
+      // Backend returns snake_case, so we check both formats
+      const content = uc.content as any
+      return uc.content && content.id && (content.externalId || content.external_id) && content.type
+    })
+    .map((uc) => {
+      // Transform snake_case to camelCase for consistency
+      const dbContent = uc.content as any
+      return {
+        id: dbContent.id,
+        externalId: dbContent.external_id || dbContent.externalId,
+        type: dbContent.type,
+        title: dbContent.title,
+        originalTitle: dbContent.original_title || dbContent.originalTitle,
+        posterPath: dbContent.poster_path || dbContent.posterPath,
+        backdropPath: dbContent.backdrop_path || dbContent.backdropPath,
+        overview: dbContent.overview,
+        releaseDate: dbContent.release_date || dbContent.releaseDate,
+        genres: dbContent.genres || [],
+        rating: dbContent.rating,
+        voteCount: dbContent.vote_count || dbContent.voteCount,
+        runtime: dbContent.runtime,
+        episodeCount: dbContent.episode_count || dbContent.episodeCount,
+        seasonCount: dbContent.season_count || dbContent.seasonCount,
+        status: dbContent.status,
+        userContentId: uc.id,
+      }
+    }) || []
 
-  const userContentStatus = userContent?.reduce((acc, uc) => {
+  const userContentStatus = allUserContent?.reduce((acc, uc) => {
     acc[uc.content.id] = uc.status
     return acc
   }, {} as Record<string, WatchStatus>) || {}
 
-  const watchingCount = userContent?.filter((c) => c.status === 'watching').length || 0
-  const completedCount = userContent?.filter((c) => c.status === 'completed').length || 0
-  const plannedCount = userContent?.filter((c) => c.status === 'plan_to_watch').length || 0
-  const totalCount = userContent?.length || 0
+  const watchingCount = allUserContent?.filter((c) => c.status === 'watching').length || 0
+  const completedCount = allUserContent?.filter((c) => c.status === 'completed').length || 0
+  const plannedCount = allUserContent?.filter((c) => c.status === 'plan_to_watch').length || 0
+  const totalCount = allUserContent?.length || 0
 
   return (
     <div className="space-y-8">
@@ -76,13 +108,14 @@ export function MyListPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold md:text-3xl">Mi Lista</h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground sm:text-base">
             Administra y organiza todo tu contenido
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2 w-full sm:w-auto">
           <Plus className="h-4 w-4" />
-          Crear Lista Personalizada
+          <span className="hidden xs:inline">Crear Lista Personalizada</span>
+          <span className="xs:hidden">Nueva Lista</span>
         </Button>
       </div>
 
@@ -119,22 +152,22 @@ export function MyListPage() {
         value={activeTab}
         onValueChange={(value) => setActiveTab(value as WatchStatus | 'all')}
       >
-        <TabsList className="flex-wrap justify-start gap-1 bg-transparent p-0">
+        <TabsList className="flex-wrap justify-start gap-1.5 bg-transparent p-0">
           {statusTabs.map((tab) => {
             const Icon = tab.icon
             const count = tab.value === 'all'
               ? totalCount
-              : userContent?.filter((c) => c.status === tab.value).length || 0
+              : allUserContent?.filter((c) => c.status === tab.value).length || 0
 
             return (
               <TabsTrigger
                 key={tab.value}
                 value={tab.value}
-                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-2 rounded-full px-4"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground gap-1.5 rounded-full px-3 py-2 text-sm sm:gap-2 sm:px-4"
               >
-                <Icon className="h-4 w-4" />
-                {tab.label}
-                <span className="ml-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground data-[state=active]:bg-primary-foreground/20 data-[state=active]:text-primary-foreground">
+                <Icon className="h-4 w-4 shrink-0" />
+                <span className="hidden xs:inline">{tab.label}</span>
+                <span className="rounded-full bg-muted px-1.5 py-0.5 text-xs font-medium text-muted-foreground data-[state=active]:bg-primary-foreground/20 data-[state=active]:text-primary-foreground sm:px-2">
                   {count}
                 </span>
               </TabsTrigger>
@@ -174,7 +207,7 @@ export function MyListPage() {
                   isLoading={isLoading}
                   userContentStatus={userContentStatus}
                   onAddToList={(content, status) => {
-                    const userContentItem = userContent?.find(
+                    const userContentItem = allUserContent?.find(
                       (uc) => uc.content.id === content.id
                     )
                     if (userContentItem) {
@@ -182,6 +215,14 @@ export function MyListPage() {
                         userContentId: userContentItem.id,
                         updates: { status },
                       })
+                    }
+                  }}
+                  onRemoveFromList={(content) => {
+                    const userContentItem = allUserContent?.find(
+                      (uc) => uc.content.id === content.id
+                    )
+                    if (userContentItem) {
+                      removeFromList.mutate(userContentItem.id)
                     }
                   }}
                 />

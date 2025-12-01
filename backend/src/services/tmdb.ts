@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { env } from '../config/env.js'
-import type { TMDBMovie, TMDBTVShow, TMDBSearchResult, Content, Genre } from '../types/index.js'
+import type { TMDBMovie, TMDBTVShow, TMDBMovieDetails, TMDBTVShowDetails, TMDBSearchResult, Content, Genre } from '../types/index.js'
 
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3'
 
@@ -43,14 +43,36 @@ export function mapTMDBMovieToContent(movie: TMDBMovie): Content {
     type: 'movie',
     title: movie.title,
     originalTitle: movie.original_title,
-    posterPath: movie.poster_path,
-    backdropPath: movie.backdrop_path,
+    posterPath: movie.poster_path ?? undefined,
+    backdropPath: movie.backdrop_path ?? undefined,
     overview: movie.overview,
     releaseDate: movie.release_date,
     genres: mapGenres(movie.genre_ids, 'movie'),
     rating: movie.vote_average,
     voteCount: movie.vote_count,
     runtime: movie.runtime,
+  }
+}
+
+export function mapTMDBMovieDetailsToContent(movie: TMDBMovieDetails): Content {
+  return {
+    id: `movie-${movie.id}`,
+    externalId: String(movie.id),
+    type: 'movie',
+    title: movie.title,
+    originalTitle: movie.original_title,
+    posterPath: movie.poster_path ?? undefined,
+    backdropPath: movie.backdrop_path ?? undefined,
+    overview: movie.overview,
+    releaseDate: movie.release_date,
+    genres: movie.genres, // Already in correct format
+    rating: movie.vote_average,
+    voteCount: movie.vote_count,
+    runtime: movie.runtime,
+    status: movie.status,
+    productionCompanies: movie.production_companies?.map(c => c.name),
+    originalLanguage: movie.original_language,
+    popularity: movie.popularity,
   }
 }
 
@@ -61,8 +83,8 @@ export function mapTMDBTVShowToContent(show: TMDBTVShow): Content {
     type: 'tv',
     title: show.name,
     originalTitle: show.original_name,
-    posterPath: show.poster_path,
-    backdropPath: show.backdrop_path,
+    posterPath: show.poster_path ?? undefined,
+    backdropPath: show.backdrop_path ?? undefined,
     overview: show.overview,
     releaseDate: show.first_air_date,
     genres: mapGenres(show.genre_ids, 'tv'),
@@ -71,6 +93,30 @@ export function mapTMDBTVShowToContent(show: TMDBTVShow): Content {
     episodeCount: show.number_of_episodes,
     seasonCount: show.number_of_seasons,
     status: show.status,
+  }
+}
+
+export function mapTMDBTVShowDetailsToContent(show: TMDBTVShowDetails): Content {
+  return {
+    id: `tv-${show.id}`,
+    externalId: String(show.id),
+    type: 'tv',
+    title: show.name,
+    originalTitle: show.original_name,
+    posterPath: show.poster_path ?? undefined,
+    backdropPath: show.backdrop_path ?? undefined,
+    overview: show.overview,
+    releaseDate: show.first_air_date,
+    genres: show.genres, // Already in correct format
+    rating: show.vote_average,
+    voteCount: show.vote_count,
+    episodeCount: show.number_of_episodes,
+    seasonCount: show.number_of_seasons,
+    status: show.status,
+    runtime: show.episode_run_time?.[0],
+    productionCompanies: show.production_companies?.map(c => c.name),
+    originalLanguage: show.original_language,
+    popularity: show.popularity,
   }
 }
 
@@ -100,13 +146,13 @@ export const tmdbService = {
   },
 
   async getMovieById(id: string) {
-    const { data } = await tmdbClient.get<TMDBMovie>(`/movie/${id}`)
-    return mapTMDBMovieToContent(data)
+    const { data } = await tmdbClient.get<TMDBMovieDetails>(`/movie/${id}`)
+    return mapTMDBMovieDetailsToContent(data)
   },
 
   async getTVById(id: string) {
-    const { data } = await tmdbClient.get<TMDBTVShow>(`/tv/${id}`)
-    return mapTMDBTVShowToContent(data)
+    const { data } = await tmdbClient.get<TMDBTVShowDetails>(`/tv/${id}`)
+    return mapTMDBTVShowDetailsToContent(data)
   },
 
   async getTrendingMovies(page = 1) {
