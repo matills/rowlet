@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Star, Check, Eye, Clock, CheckCircle, X, Heart } from 'lucide-react'
+import { Star, X, Eye, Heart } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Card, Badge, Button } from '@/components/ui'
+import { Card, Badge } from '@/components/ui'
 import { ContentCardMenu } from './ContentCardMenu'
 import { cn } from '@/lib/utils'
 import type { Content, WatchStatus } from '@/types'
@@ -53,6 +53,8 @@ export function ContentCard({
   const [isInList, setIsInList] = useState(!!userStatus)
   const [isHovered, setIsHovered] = useState(false)
   const [liked, setLiked] = useState(isLiked)
+  const [watched, setWatched] = useState(userStatus === 'completed')
+  const [isWatchedAnimating, setIsWatchedAnimating] = useState(false)
 
   // Check if posterPath is a full URL (for anime from Jikan) or a path (for TMDB)
   const imageUrl = content.posterPath
@@ -88,7 +90,25 @@ export function ContentCard({
   const handleMarkWatched = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    onMarkAsWatched?.()
+
+    // Toggle el estado de watched
+    const newWatchedState = !watched
+    setWatched(newWatchedState)
+
+    // Activar animación solo cuando se marca como visto
+    if (newWatchedState) {
+      setIsWatchedAnimating(true)
+      setTimeout(() => setIsWatchedAnimating(false), 600)
+    }
+
+    // Solo llamar a los handlers cuando se marca como visto (no cuando se desmarca)
+    if (newWatchedState) {
+      if (onMarkAsWatched) {
+        onMarkAsWatched()
+      } else if (onAddToList) {
+        onAddToList('completed')
+      }
+    }
   }
 
   // Validate that we have the required data for the link
@@ -146,8 +166,22 @@ export function ContentCard({
               {/* Quick action icons - always visible */}
               <motion.button
                 onClick={handleMarkWatched}
-                className="flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white backdrop-blur-sm transition-colors hover:bg-black/90"
-                title="Marcar como visto"
+                className={cn(
+                  "flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-sm transition-all duration-300",
+                  watched
+                    ? "bg-green-500/90 text-white hover:bg-green-600 shadow-lg shadow-green-500/50"
+                    : "bg-black/70 text-white hover:bg-black/90"
+                )}
+                animate={
+                  isWatchedAnimating
+                    ? {
+                        scale: [1, 1.2, 1],
+                        rotate: [0, 10, -10, 0],
+                      }
+                    : {}
+                }
+                transition={{ duration: 0.5 }}
+                title={watched ? "Marcado como visto" : "Marcar como visto"}
               >
                 <Eye className="h-4 w-4" />
               </motion.button>
@@ -168,12 +202,9 @@ export function ContentCard({
               {/* Menu de opciones */}
               <div className="relative">
                 <ContentCardMenu
-                  onAddToList={() => console.log('Add to list')}
-                  onAddToWatchlist={() => console.log('Add to watchlist')}
-                  onShowInLists={() => console.log('Show in lists')}
-                  onWhereToWatch={() => console.log('Where to watch')}
-                  onReview={() => console.log('Review')}
-                  onShowActivity={() => console.log('Show activity')}
+                  content={content}
+                  onAddToList={onAddToList}
+                  onMarkAsWatched={handleMarkWatched}
                 />
               </div>
             </div>
@@ -181,62 +212,11 @@ export function ContentCard({
             {/* Type Badge - Always visible */}
             <Badge
               variant={typeVariants[content.type]}
-              className="absolute left-2 top-2 z-10"
+              className="absolute left-2 top-2 z-10 backdrop-blur-sm text-xs px-3 py-1"
             >
               {typeLabels[content.type]}
             </Badge>
 
-            {/* Quick actions on hover */}
-            {showQuickActions && onAddToList && (
-              <motion.div
-                className="absolute bottom-0 left-0 right-0 p-3 space-y-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-                transition={{ duration: 0.2 }}
-              >
-                {isInList || userStatus ? (
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="w-full gap-2"
-                    disabled
-                  >
-                    <Check className="h-3.5 w-3.5" />
-                    En mi lista
-                  </Button>
-                ) : (
-                  <div className="grid grid-cols-3 gap-1.5">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="px-3 h-8"
-                      onClick={(e) => handleAddToList(e, 'watching')}
-                      title="Viendo"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="px-3 h-8"
-                      onClick={(e) => handleAddToList(e, 'completed')}
-                      title="Visto"
-                    >
-                      <CheckCircle className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="px-3 h-8"
-                      onClick={(e) => handleAddToList(e, 'plan_to_watch')}
-                      title="Luego"
-                    >
-                      <Clock className="h-4 w-4" />
-                    </Button>
-                  </div>
-                )}
-              </motion.div>
-            )}
 
             {/* User Status Badge */}
             {userStatus && !isHovered && (

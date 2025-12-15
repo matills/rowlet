@@ -8,6 +8,8 @@ interface ContentGridProps {
   onAddToList?: (content: Content, status: WatchStatus) => void
   onRemoveFromList?: (content: Content) => void
   userContentStatus?: Record<string, WatchStatus>
+  onToggleLike?: (content: Content) => void
+  onMarkAsWatched?: (content: Content) => void
 }
 
 export function ContentGrid({
@@ -16,6 +18,8 @@ export function ContentGrid({
   onAddToList,
   onRemoveFromList,
   userContentStatus = {},
+  onToggleLike,
+  onMarkAsWatched,
 }: ContentGridProps) {
   if (isLoading) {
     return (
@@ -48,6 +52,8 @@ export function ContentGrid({
           userStatus={userContentStatus[item.id]}
           onAddToList={onAddToList ? (status) => onAddToList(item, status) : undefined}
           onRemoveFromList={onRemoveFromList ? () => onRemoveFromList(item) : undefined}
+          onToggleLike={onToggleLike ? () => onToggleLike(item) : undefined}
+          onMarkAsWatched={onMarkAsWatched ? () => onMarkAsWatched(item) : undefined}
         />
       ))}
     </div>

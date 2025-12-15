@@ -1,34 +1,39 @@
 import { useState } from 'react'
-import { MoreVertical, Star, Plus, List as ListIcon, Eye } from 'lucide-react'
+import { MoreVertical, CheckCircle, Eye, Clock, Pause, XCircle } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui'
+import type { Content, WatchStatus } from '@/types'
 
 interface ContentCardMenuProps {
-  onAddToList?: () => void
-  onAddToWatchlist?: () => void
-  onShowInLists?: () => void
-  onWhereToWatch?: () => void
-  onReview?: () => void
-  onShowActivity?: () => void
+  content: Content
+  onAddToList?: (status: WatchStatus) => void
+  onMarkAsWatched?: (e: React.MouseEvent) => void
 }
 
 export function ContentCardMenu({
+  content,
   onAddToList,
-  onAddToWatchlist,
-  onShowInLists,
-  onWhereToWatch,
-  onReview,
-  onShowActivity,
+  onMarkAsWatched,
 }: ContentCardMenuProps) {
   const [open, setOpen] = useState(false)
 
-  const handleAction = (action: () => void) => {
-    action()
+  const handleAddToList = (e: React.MouseEvent, status: WatchStatus) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onAddToList?.(status)
+    setOpen(false)
+  }
+
+  const handleMarkWatched = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onMarkAsWatched?.(e)
     setOpen(false)
   }
 
@@ -46,42 +51,31 @@ export function ContentCardMenu({
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        {onShowActivity && (
-          <DropdownMenuItem onClick={() => handleAction(onShowActivity)}>
-            <Eye className="mr-2 h-4 w-4" />
-            <span>Show your activity</span>
-          </DropdownMenuItem>
-        )}
-        {onReview && (
-          <DropdownMenuItem onClick={() => handleAction(onReview)}>
-            <Star className="mr-2 h-4 w-4" />
-            <span>Review or log film...</span>
-          </DropdownMenuItem>
-        )}
+        <DropdownMenuLabel>Agregar a mi lista</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {onAddToWatchlist && (
-          <DropdownMenuItem onClick={() => handleAction(onAddToWatchlist)}>
-            <Plus className="mr-2 h-4 w-4" />
-            <span>Add to watchlist</span>
-          </DropdownMenuItem>
-        )}
         {onAddToList && (
-          <DropdownMenuItem onClick={() => handleAction(onAddToList)}>
-            <ListIcon className="mr-2 h-4 w-4" />
-            <span>Add to lists...</span>
-          </DropdownMenuItem>
-        )}
-        {onShowInLists && (
-          <DropdownMenuItem onClick={() => handleAction(onShowInLists)}>
-            <ListIcon className="mr-2 h-4 w-4" />
-            <span>Show in lists</span>
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuSeparator />
-        {onWhereToWatch && (
-          <DropdownMenuItem onClick={() => handleAction(onWhereToWatch)}>
-            <span>Where to watch</span>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem onClick={(e) => handleAddToList(e, 'watching')}>
+              <Eye className="mr-2 h-4 w-4" />
+              <span>Viendo</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => handleAddToList(e, 'completed')}>
+              <CheckCircle className="mr-2 h-4 w-4" />
+              <span>Completado</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => handleAddToList(e, 'plan_to_watch')}>
+              <Clock className="mr-2 h-4 w-4" />
+              <span>Planeado</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => handleAddToList(e, 'on_hold')}>
+              <Pause className="mr-2 h-4 w-4" />
+              <span>En espera</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => handleAddToList(e, 'dropped')}>
+              <XCircle className="mr-2 h-4 w-4" />
+              <span>Abandonado</span>
+            </DropdownMenuItem>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

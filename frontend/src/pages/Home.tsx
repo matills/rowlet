@@ -3,7 +3,7 @@ import { ArrowRight, Play, TrendingUp, Film, Tv, Clapperboard } from 'lucide-rea
 import { motion } from 'framer-motion'
 import { Button, Card, CardHeader, CardTitle, CardContent } from '@/components/ui'
 import { ContentGrid, SearchBar } from '@/components/content'
-import { useTrendingContent, useAuth, useAddToList } from '@/hooks'
+import { useTrendingContent, useAuth, useAddToList, useToggleLike } from '@/hooks'
 
 export function HomePage() {
   const { isAuthenticated } = useAuth()
@@ -11,6 +11,26 @@ export function HomePage() {
   const { data: trendingTV, isLoading: isLoadingTV } = useTrendingContent('tv')
   const { data: trendingAnime, isLoading: isLoadingAnime } = useTrendingContent('anime')
   const addToList = useAddToList()
+  const toggleLike = useToggleLike()
+
+  // Handler para marcar como visto - agrega como "completed"
+  const handleMarkAsWatched = (content: any) => {
+    if (isAuthenticated) {
+      addToList.mutate({ content, status: 'completed' })
+    }
+  }
+
+  // Handler para me gusta
+  const handleToggleLike = (content: any) => {
+    if (isAuthenticated) {
+      toggleLike.mutate({
+        externalId: content.externalId,
+        type: content.type,
+        title: content.title,
+        posterPath: content.posterPath,
+      })
+    }
+  }
 
   return (
     <div className="space-y-10">
@@ -138,6 +158,8 @@ export function HomePage() {
               ? (content, status) => addToList.mutate({ content, status })
               : undefined
           }
+          onMarkAsWatched={isAuthenticated ? handleMarkAsWatched : undefined}
+          onToggleLike={isAuthenticated ? handleToggleLike : undefined}
         />
       </section>
 
@@ -166,6 +188,8 @@ export function HomePage() {
               ? (content, status) => addToList.mutate({ content, status })
               : undefined
           }
+          onMarkAsWatched={isAuthenticated ? handleMarkAsWatched : undefined}
+          onToggleLike={isAuthenticated ? handleToggleLike : undefined}
         />
       </section>
 
@@ -194,6 +218,8 @@ export function HomePage() {
               ? (content, status) => addToList.mutate({ content, status })
               : undefined
           }
+          onMarkAsWatched={isAuthenticated ? handleMarkAsWatched : undefined}
+          onToggleLike={isAuthenticated ? handleToggleLike : undefined}
         />
       </section>
 

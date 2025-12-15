@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui'
 import { SearchBar, ContentGrid, SearchFilters, type FilterOptions } from '@/components/content'
-import { useContentSearch, useAuth, useAddToList } from '@/hooks'
+import { useContentSearch, useAuth, useAddToList, useToggleLike } from '@/hooks'
 import type { ContentType } from '@/types'
 
 export function SearchPage() {
@@ -29,6 +29,26 @@ export function SearchPage() {
 
   const { isAuthenticated } = useAuth()
   const addToList = useAddToList()
+  const toggleLike = useToggleLike()
+
+  // Handler para marcar como visto
+  const handleMarkAsWatched = (content: any) => {
+    if (isAuthenticated) {
+      addToList.mutate({ content, status: 'completed' })
+    }
+  }
+
+  // Handler para me gusta
+  const handleToggleLike = (content: any) => {
+    if (isAuthenticated) {
+      toggleLike.mutate({
+        externalId: content.externalId,
+        type: content.type,
+        title: content.title,
+        posterPath: content.posterPath,
+      })
+    }
+  }
 
   const { data, isLoading, isFetching } = useContentSearch({
     query,
@@ -164,6 +184,8 @@ export function SearchPage() {
                     ? (content, status) => addToList.mutate({ content, status })
                     : undefined
                 }
+                onMarkAsWatched={isAuthenticated ? handleMarkAsWatched : undefined}
+                onToggleLike={isAuthenticated ? handleToggleLike : undefined}
               />
             </>
           ) : (
@@ -194,6 +216,8 @@ export function SearchPage() {
                       ? (content, status) => addToList.mutate({ content, status })
                       : undefined
                   }
+                  onMarkAsWatched={isAuthenticated ? handleMarkAsWatched : undefined}
+                  onToggleLike={isAuthenticated ? handleToggleLike : undefined}
                 />
               </>
             ) : (

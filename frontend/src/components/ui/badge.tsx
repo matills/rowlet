@@ -27,11 +27,11 @@ const badgeVariants = cva(
         dropped:
           "border-transparent bg-red-500/15 text-red-500",
         movie:
-          "border-transparent bg-primary/15 text-primary",
+          "border-2 border-blue-400 bg-blue-500/90 text-white font-bold shadow-xl",
         tv:
-          "border-transparent bg-secondary/15 text-secondary",
+          "border-2 border-purple-400 bg-purple-500/90 text-white font-bold shadow-xl",
         anime:
-          "border-transparent bg-accent/15 text-accent",
+          "border-2 border-pink-400 bg-pink-500/90 text-white font-bold shadow-xl",
       },
     },
     defaultVariants: {

@@ -21,6 +21,15 @@ Esto creará todas las tablas necesarias:
 - `user_content` - Relación entre usuarios y contenido (lista personal)
 - `user_lists` - Listas personalizadas de usuarios
 - `list_items` - Items en las listas personalizadas
+- `user_likes` - Likes de usuarios en contenido
+
+### Aplicar migraciones
+
+Después de aplicar el esquema inicial, ejecuta las migraciones en orden:
+
+1. En el SQL Editor de Supabase, ejecuta el contenido de `migrations/001_add_likes.sql`
+
+Esto agregará la tabla de likes y sus índices correspondientes.
 
 ## 3. Configurar variables de entorno
 

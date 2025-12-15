@@ -291,3 +291,142 @@ userRouter.get('/wrapped', authenticate, async (req: AuthRequest, res, next) => 
     next(error)
   }
 })
+
+// Get user's liked content
+userRouter.get('/likes', authenticate, async (req: AuthRequest, res, next) => {
+  try {
+    const { data: likes, error } = await supabase
+      .from('user_likes')
+      .select(`
+        *,
+        content (*)
+      `)
+      .eq('user_id', req.user!.userId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      throw new AppError(500, 'Error al obtener los likes')
+    }
+
+    res.json(likes || [])
+  } catch (error) {
+    next(error)
+  }
+})
+
+// Toggle like on content
+userRouter.post('/likes', authenticate, async (req: AuthRequest, res, next) => {
+  try {
+    const schema = z.object({
+      externalId: z.string(),
+      type: z.enum(['movie', 'tv', 'anime']),
+      title: z.string(),
+      posterPath: z.string().optional(),
+    })
+
+    const data = schema.parse(req.body)
+
+    // First, ensure content exists in our database
+    const { data: existingContent } = await supabase
+      .from('content')
+      .select('*')
+      .eq('external_id', data.externalId)
+      .eq('type', data.type)
+      .single<DbContent>()
+
+    let content = existingContent
+
+    if (!content) {
+      const { data: newContent, error: createError } = await supabase
+        .from('content')
+        .insert({
+          external_id: data.externalId,
+          type: data.type,
+          title: data.title,
+          poster_path: data.posterPath,
+        })
+        .select()
+        .single<DbContent>()
+
+      if (createError || !newContent) {
+        throw new AppError(500, 'Error al crear el contenido')
+      }
+
+      content = newContent
+    }
+
+    // Check if user already liked this content
+    const { data: existingLike } = await supabase
+      .from('user_likes')
+      .select('id')
+      .eq('user_id', req.user!.userId)
+      .eq('content_id', content!.id)
+      .single()
+
+    if (existingLike) {
+      // Unlike - remove the like
+      const { error } = await supabase
+        .from('user_likes')
+        .delete()
+        .eq('id', existingLike.id)
+
+      if (error) {
+        throw new AppError(500, 'Error al quitar el like')
+      }
+
+      res.json({ liked: false })
+    } else {
+      // Like - add the like
+      const { data: newLike, error } = await supabase
+        .from('user_likes')
+        .insert({
+          user_id: req.user!.userId,
+          content_id: content!.id,
+        })
+        .select(`
+          *,
+          content (*)
+        `)
+        .single()
+
+      if (error || !newLike) {
+        throw new AppError(500, 'Error al agregar el like')
+      }
+
+      res.status(201).json({ liked: true, data: newLike })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+// Check if content is liked by user
+userRouter.get('/likes/check/:externalId/:type', authenticate, async (req: AuthRequest, res, next) => {
+  try {
+    const { externalId, type } = req.params
+
+    // Get content by external_id and type
+    const { data: content } = await supabase
+      .from('content')
+      .select('id')
+      .eq('external_id', externalId)
+      .eq('type', type)
+      .single<DbContent>()
+
+    if (!content) {
+      return res.json({ liked: false })
+    }
+
+    // Check if user has liked this content
+    const { data: like } = await supabase
+      .from('user_likes')
+      .select('id')
+      .eq('user_id', req.user!.userId)
+      .eq('content_id', content.id)
+      .single()
+
+    res.json({ liked: !!like })
+  } catch (error) {
+    next(error)
+  }
+})
