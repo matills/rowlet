@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { logger } from './config/logger';
+import apiRoutes from './routes';
 
 // Load environment variables
 dotenv.config();
@@ -39,6 +40,9 @@ app.get(`/api/${API_VERSION}`, (req: Request, res: Response) => {
     status: 'running',
   });
 });
+
+// Mount API routes
+app.use(`/api/${API_VERSION}`, apiRoutes);
 
 // 404 handler
 app.use((req: Request, res: Response) => {
