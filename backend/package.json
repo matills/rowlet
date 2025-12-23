@@ -10,7 +10,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint . --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "seed": "tsx src/scripts/seed.ts"
   },
   "keywords": [
     "tracking",
@@ -28,6 +29,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "helmet": "^8.0.0",
+    "ioredis": "^5.8.2",
     "morgan": "^1.10.0",
     "winston": "^3.17.0",
     "zod": "^3.24.1"
