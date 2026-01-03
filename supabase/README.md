@@ -135,9 +135,3 @@ Para agregar nuevas migraciones:
 1. Crea un nuevo archivo: `00002_nombre_descriptivo.sql`
 2. Sigue el mismo formato
 3. Documenta los cambios en este README
-
-## Recursos
-
-- [Supabase Docs](https://supabase.com/docs)
-- [Row Level Security](https://supabase.com/docs/guides/auth/row-level-security)
-- [SQL Editor](https://supabase.com/docs/guides/database/overview)

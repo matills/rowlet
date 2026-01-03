@@ -1,0 +1,553 @@
+{
+	"info": {
+		"_postman_id": "owlist-api-collection-v2",
+		"name": "Owlist API - Complete",
+		"description": "Complete API collection for Owlist backend with new architecture",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123\",\n  \"username\": \"testuser\",\n  \"displayName\": \"Test User\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"access_token\", jsonData.session.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.session.refresh_token);",
+									"    console.log('Tokens saved!');",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Get Me",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/auth/me",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "me"]
+						}
+					}
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"access_token\", jsonData.session.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.session.refresh_token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "refresh"]
+						}
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "logout"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "External APIs (Search & Import)",
+			"item": [
+				{
+					"name": "Search Anime (AniList)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/external/search?query=naruto&type=anime&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["external", "search"],
+							"query": [
+								{"key": "query", "value": "naruto"},
+								{"key": "type", "value": "anime"},
+								{"key": "page", "value": "1"}
+							]
+						},
+						"description": "Search anime in AniList API (does not save to database)"
+					}
+				},
+				{
+					"name": "Search Movie (TMDB)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/external/search?query=fight%20club&type=movie&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["external", "search"],
+							"query": [
+								{"key": "query", "value": "fight club"},
+								{"key": "type", "value": "movie"},
+								{"key": "page", "value": "1"}
+							]
+						},
+						"description": "Search movies in TMDB API (does not save to database)"
+					}
+				},
+				{
+					"name": "Search Series (TMDB)",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/external/search?query=breaking%20bad&type=series&page=1",
+							"host": ["{{base_url}}"],
+							"path": ["external", "search"],
+							"query": [
+								{"key": "query", "value": "breaking bad"},
+								{"key": "type", "value": "series"},
+								{"key": "page", "value": "1"}
+							]
+						},
+						"description": "Search series in TMDB API (does not save to database)"
+					}
+				},
+				{
+					"name": "Import Anime from AniList",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"media_id\", jsonData.data.id);",
+									"    console.log('Media imported! ID: ' + jsonData.data.id);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"externalId\": \"20\",\n  \"source\": \"anilist\",\n  \"type\": \"anime\"\n}",
+							"options": {
+								"raw": {
+									"description": "Naruto (ID: 20 in AniList)"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/external/import",
+							"host": ["{{base_url}}"],
+							"path": ["external", "import"]
+						},
+						"description": "Import anime from AniList and save to database"
+					}
+				},
+				{
+					"name": "Import Movie from TMDB",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"media_id\", jsonData.data.id);",
+									"    console.log('Media imported! ID: ' + jsonData.data.id);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"externalId\": \"550\",\n  \"source\": \"tmdb\",\n  \"type\": \"movie\"\n}",
+							"options": {
+								"raw": {
+									"description": "Fight Club (ID: 550 in TMDB)"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/external/import",
+							"host": ["{{base_url}}"],
+							"path": ["external", "import"]
+						},
+						"description": "Import movie from TMDB and save to database"
+					}
+				}
+			]
+		},
+		{
+			"name": "My List (User Media Tracking)",
+			"item": [
+				{
+					"name": "Get My Full List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/me/list?page=1&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "list"],
+							"query": [
+								{"key": "page", "value": "1"},
+								{"key": "limit", "value": "20"}
+							]
+						},
+						"description": "Get all media in my list (all statuses)"
+					}
+				},
+				{
+					"name": "Get My Watching List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/me/list/watching?page=1&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "list", "watching"],
+							"query": [
+								{"key": "page", "value": "1"},
+								{"key": "limit", "value": "20"}
+							]
+						},
+						"description": "Get media I'm currently watching"
+					}
+				},
+				{
+					"name": "Get My Completed List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/me/list/completed",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "list", "completed"]
+						},
+						"description": "Get media I've completed"
+					}
+				},
+				{
+					"name": "Get My Plan to Watch",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/me/list/plan_to_watch",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "list", "plan_to_watch"]
+						},
+						"description": "Get media I plan to watch"
+					}
+				},
+				{
+					"name": "Add to My List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mediaId\": \"{{media_id}}\",\n  \"status\": \"watching\",\n  \"score\": 8.5,\n  \"notes\": \"Great anime!\",\n  \"episodesWatched\": 5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/me/list",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "list"]
+						},
+						"description": "Add media to my list. First import media from external API, then add to list."
+					}
+				},
+				{
+					"name": "Update List Item",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "PUT",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"completed\",\n  \"score\": 9.0,\n  \"notes\": \"Amazing series!\",\n  \"episodesWatched\": 220\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/me/list/{{media_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "list", "{{media_id}}"]
+						},
+						"description": "Update media status, score, or notes"
+					}
+				},
+				{
+					"name": "Update Progress",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "PATCH",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"episodesWatched\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/me/list/{{media_id}}/progress",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "list", "{{media_id}}", "progress"]
+						},
+						"description": "Update how many episodes you've watched"
+					}
+				},
+				{
+					"name": "Remove from My List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "DELETE",
+						"url": {
+							"raw": "{{base_url}}/users/me/list/{{media_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "list", "{{media_id}}"]
+						},
+						"description": "Remove media from my list"
+					}
+				},
+				{
+					"name": "Get My Stats",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/me/stats",
+							"host": ["{{base_url}}"],
+							"path": ["users", "me", "stats"]
+						},
+						"description": "Get my statistics (total watched, avg score, etc.)"
+					}
+				}
+			]
+		},
+		{
+			"name": "Public User Lists",
+			"item": [
+				{
+					"name": "Get User List",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills/list?page=1&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["users", "matills", "list"],
+							"query": [
+								{"key": "page", "value": "1"},
+								{"key": "limit", "value": "20"}
+							]
+						},
+						"description": "View another user's public list"
+					}
+				},
+				{
+					"name": "Get User Completed List",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills/list/completed",
+							"host": ["{{base_url}}"],
+							"path": ["users", "matills", "list", "completed"]
+						},
+						"description": "View another user's completed list"
+					}
+				}
+			]
+		},
+		{
+			"name": "Media (Database)",
+			"item": [
+				{
+					"name": "Search Media in DB",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/media?search=naruto&type=anime&page=1&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["media"],
+							"query": [
+								{"key": "search", "value": "naruto"},
+								{"key": "type", "value": "anime"},
+								{"key": "page", "value": "1"},
+								{"key": "limit", "value": "20"}
+							]
+						},
+						"description": "Search media in your database (not external APIs)"
+					}
+				},
+				{
+					"name": "Get Trending",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/media/trending",
+							"host": ["{{base_url}}"],
+							"path": ["media", "trending"]
+						}
+					}
+				},
+				{
+					"name": "Get Popular",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/media/popular",
+							"host": ["{{base_url}}"],
+							"path": ["media", "popular"]
+						}
+					}
+				},
+				{
+					"name": "Get Media By ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/media/{{media_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["media", "{{media_id}}"]
+						}
+					}
+				},
+				{
+					"name": "Get Seasons",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/media/{{media_id}}/seasons",
+							"host": ["{{base_url}}"],
+							"path": ["media", "{{media_id}}", "seasons"]
+						}
+					}
+				},
+				{
+					"name": "Get Episodes",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/media/{{media_id}}/seasons/1/episodes",
+							"host": ["{{base_url}}"],
+							"path": ["media", "{{media_id}}", "seasons", "1", "episodes"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Health & Info",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:3000/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "3000",
+							"path": ["health"]
+						}
+					}
+				},
+				{
+					"name": "API Info",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}",
+							"host": ["{{base_url}}"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "media_id",
+			"value": "",
+			"type": "string",
+			"description": "Auto-populated after importing media"
+		}
+	]
+}
