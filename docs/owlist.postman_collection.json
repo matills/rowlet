@@ -421,6 +421,186 @@
 			]
 		},
 		{
+			"name": "Custom Lists",
+			"item": [
+				{
+					"name": "Get My Custom Lists",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/lists?page=1&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["lists"],
+							"query": [
+								{"key": "page", "value": "1"},
+								{"key": "limit", "value": "20"}
+							]
+						},
+						"description": "Get all my custom lists"
+					}
+				},
+				{
+					"name": "Create Custom List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"list_id\", jsonData.data.id);",
+									"    console.log('List created! ID: ' + jsonData.data.id);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"My Favorite Anime\",\n  \"description\": \"A collection of my all-time favorite anime series\",\n  \"isPublic\": true,\n  \"coverImageUrl\": null\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lists",
+							"host": ["{{base_url}}"],
+							"path": ["lists"]
+						},
+						"description": "Create a new custom list"
+					}
+				},
+				{
+					"name": "Get List By ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["lists", "{{list_id}}"]
+						},
+						"description": "Get a specific list (public or owned)"
+					}
+				},
+				{
+					"name": "Update List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "PUT",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"My Favorite Anime (Updated)\",\n  \"description\": \"Updated description\",\n  \"isPublic\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["lists", "{{list_id}}"]
+						},
+						"description": "Update list metadata"
+					}
+				},
+				{
+					"name": "Delete List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "DELETE",
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["lists", "{{list_id}}"]
+						},
+						"description": "Delete a custom list"
+					}
+				},
+				{
+					"name": "Add Item to List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"mediaId\": \"{{media_id}}\",\n  \"notes\": \"This is one of my favorites!\",\n  \"position\": 0\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/items",
+							"host": ["{{base_url}}"],
+							"path": ["lists", "{{list_id}}", "items"]
+						},
+						"description": "Add media to custom list"
+					}
+				},
+				{
+					"name": "Update List Item",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "PUT",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"position\": 5,\n  \"notes\": \"Updated notes\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/items/{{media_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["lists", "{{list_id}}", "items", "{{media_id}}"]
+						},
+						"description": "Update item position or notes"
+					}
+				},
+				{
+					"name": "Remove Item from List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "DELETE",
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/items/{{media_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["lists", "{{list_id}}", "items", "{{media_id}}"]
+						},
+						"description": "Remove media from custom list"
+					}
+				},
+				{
+					"name": "Reorder List",
+					"request": {
+						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"method": "PUT",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"itemIds\": [\n    \"media-id-1\",\n    \"media-id-2\",\n    \"media-id-3\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/reorder",
+							"host": ["{{base_url}}"],
+							"path": ["lists", "{{list_id}}", "reorder"]
+						},
+						"description": "Reorder all items in list"
+					}
+				},
+				{
+					"name": "Get User's Public Lists",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills/lists?page=1&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["users", "matills", "lists"],
+							"query": [
+								{"key": "page", "value": "1"},
+								{"key": "limit", "value": "20"}
+							]
+						},
+						"description": "View another user's public custom lists"
+					}
+				}
+			]
+		},
+		{
 			"name": "Media (Database)",
 			"item": [
 				{
@@ -548,6 +728,12 @@
 			"value": "",
 			"type": "string",
 			"description": "Auto-populated after importing media"
+		},
+		{
+			"key": "list_id",
+			"value": "",
+			"type": "string",
+			"description": "Auto-populated after creating a custom list"
 		}
 	]
 }
