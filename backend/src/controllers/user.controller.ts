@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { userService } from '../services/user.service';
+import { userStatsService } from '../services/user-stats.service';
 import { logger } from '../config/logger';
 import type { AuthRequest } from '../middlewares/auth';
 import type {
@@ -186,7 +187,7 @@ export class UserController {
   }
 
   /**
-   * Get user stats
+   * Get user stats (basic)
    * GET /api/users/:username/stats
    */
   async getUserStats(req: AuthRequest, res: Response): Promise<void> {
@@ -214,6 +215,93 @@ export class UserController {
       res.status(500).json({
         error: 'Internal Server Error',
         message: 'Failed to fetch stats',
+      });
+    }
+  }
+
+  /**
+   * Get current user general statistics
+   * GET /api/users/me/stats
+   * Sprint 6: Comprehensive user statistics
+   */
+  async getMyStatsGeneral(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      if (!req.user) {
+        res.status(401).json({
+          error: 'Unauthorized',
+          message: 'User not authenticated',
+        });
+        return;
+      }
+
+      const stats = await userStatsService.getUserStatsGeneral(req.user.id);
+
+      res.status(200).json({
+        stats,
+      });
+    } catch (error) {
+      logger.error('Get my stats general error:', error);
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: 'Failed to fetch statistics',
+      });
+    }
+  }
+
+  /**
+   * Get current user genre statistics
+   * GET /api/users/me/stats/genres
+   * Sprint 6: Genre distribution statistics
+   */
+  async getMyStatsGenres(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      if (!req.user) {
+        res.status(401).json({
+          error: 'Unauthorized',
+          message: 'User not authenticated',
+        });
+        return;
+      }
+
+      const stats = await userStatsService.getUserStatsGenres(req.user.id);
+
+      res.status(200).json({
+        stats,
+      });
+    } catch (error) {
+      logger.error('Get my stats genres error:', error);
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: 'Failed to fetch genre statistics',
+      });
+    }
+  }
+
+  /**
+   * Get current user timeline statistics
+   * GET /api/users/me/stats/timeline
+   * Sprint 6: Activity timeline and streaks
+   */
+  async getMyStatsTimeline(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      if (!req.user) {
+        res.status(401).json({
+          error: 'Unauthorized',
+          message: 'User not authenticated',
+        });
+        return;
+      }
+
+      const stats = await userStatsService.getUserStatsTimeline(req.user.id);
+
+      res.status(200).json({
+        stats,
+      });
+    } catch (error) {
+      logger.error('Get my stats timeline error:', error);
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: 'Failed to fetch timeline statistics',
       });
     }
   }

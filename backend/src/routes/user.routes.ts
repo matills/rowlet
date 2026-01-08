@@ -47,6 +47,36 @@ router.delete('/me', authenticate, (req, res) =>
 );
 
 /**
+ * @route GET /api/users/me/stats
+ * @desc Get current user general statistics
+ * @access Private
+ * Sprint 6: Comprehensive statistics
+ */
+router.get('/me/stats', authenticate, (req, res) =>
+  userController.getMyStatsGeneral(req, res)
+);
+
+/**
+ * @route GET /api/users/me/stats/genres
+ * @desc Get current user genre statistics
+ * @access Private
+ * Sprint 6: Genre distribution
+ */
+router.get('/me/stats/genres', authenticate, (req, res) =>
+  userController.getMyStatsGenres(req, res)
+);
+
+/**
+ * @route GET /api/users/me/stats/timeline
+ * @desc Get current user timeline statistics
+ * @access Private
+ * Sprint 6: Activity timeline and streaks
+ */
+router.get('/me/stats/timeline', authenticate, (req, res) =>
+  userController.getMyStatsTimeline(req, res)
+);
+
+/**
  * @route GET /api/users/:username
  * @desc Get user profile by username (public)
  * @access Public (with optional auth)
@@ -57,7 +87,7 @@ router.get('/:username', optionalAuth, (req, res) =>
 
 /**
  * @route GET /api/users/:username/stats
- * @desc Get user stats
+ * @desc Get user stats (basic)
  * @access Public (with optional auth)
  */
 router.get('/:username/stats', optionalAuth, (req, res) =>

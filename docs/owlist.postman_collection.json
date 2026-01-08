@@ -13,15 +13,25 @@
 					"name": "Register",
 					"request": {
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123\",\n  \"username\": \"testuser\",\n  \"displayName\": \"Test User\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/auth/register",
-							"host": ["{{base_url}}"],
-							"path": ["auth", "register"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
 						}
 					}
 				},
@@ -44,27 +54,50 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/auth/login",
-							"host": ["{{base_url}}"],
-							"path": ["auth", "login"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
 						}
 					}
 				},
 				{
 					"name": "Get Me",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/auth/me",
-							"host": ["{{base_url}}"],
-							"path": ["auth", "me"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
 						}
 					}
 				},
@@ -86,27 +119,50 @@
 					],
 					"request": {
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/auth/refresh",
-							"host": ["{{base_url}}"],
-							"path": ["auth", "refresh"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
 						}
 					}
 				},
 				{
 					"name": "Logout",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "POST",
 						"url": {
 							"raw": "{{base_url}}/auth/logout",
-							"host": ["{{base_url}}"],
-							"path": ["auth", "logout"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
 						}
 					}
 				}
@@ -121,12 +177,26 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/external/search?query=naruto&type=anime&page=1",
-							"host": ["{{base_url}}"],
-							"path": ["external", "search"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"external",
+								"search"
+							],
 							"query": [
-								{"key": "query", "value": "naruto"},
-								{"key": "type", "value": "anime"},
-								{"key": "page", "value": "1"}
+								{
+									"key": "query",
+									"value": "naruto"
+								},
+								{
+									"key": "type",
+									"value": "anime"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						},
 						"description": "Search anime in AniList API (does not save to database)"
@@ -138,12 +208,26 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/external/search?query=fight%20club&type=movie&page=1",
-							"host": ["{{base_url}}"],
-							"path": ["external", "search"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"external",
+								"search"
+							],
 							"query": [
-								{"key": "query", "value": "fight club"},
-								{"key": "type", "value": "movie"},
-								{"key": "page", "value": "1"}
+								{
+									"key": "query",
+									"value": "fight club"
+								},
+								{
+									"key": "type",
+									"value": "movie"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						},
 						"description": "Search movies in TMDB API (does not save to database)"
@@ -155,12 +239,26 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/external/search?query=breaking%20bad&type=series&page=1",
-							"host": ["{{base_url}}"],
-							"path": ["external", "search"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"external",
+								"search"
+							],
 							"query": [
-								{"key": "query", "value": "breaking bad"},
-								{"key": "type", "value": "series"},
-								{"key": "page", "value": "1"}
+								{
+									"key": "query",
+									"value": "breaking bad"
+								},
+								{
+									"key": "type",
+									"value": "series"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
 							]
 						},
 						"description": "Search series in TMDB API (does not save to database)"
@@ -183,9 +281,22 @@
 						}
 					],
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"externalId\": \"20\",\n  \"source\": \"anilist\",\n  \"type\": \"anime\"\n}",
@@ -197,8 +308,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/external/import",
-							"host": ["{{base_url}}"],
-							"path": ["external", "import"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"external",
+								"import"
+							]
 						},
 						"description": "Import anime from AniList and save to database"
 					}
@@ -220,9 +336,22 @@
 						}
 					],
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"externalId\": \"550\",\n  \"source\": \"tmdb\",\n  \"type\": \"movie\"\n}",
@@ -234,8 +363,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/external/import",
-							"host": ["{{base_url}}"],
-							"path": ["external", "import"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"external",
+								"import"
+							]
 						},
 						"description": "Import movie from TMDB and save to database"
 					}
@@ -248,15 +382,35 @@
 				{
 					"name": "Get My Full List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/users/me/list?page=1&limit=20",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "list"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"list"
+							],
 							"query": [
-								{"key": "page", "value": "1"},
-								{"key": "limit", "value": "20"}
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
 							]
 						},
 						"description": "Get all media in my list (all statuses)"
@@ -265,15 +419,36 @@
 				{
 					"name": "Get My Watching List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/users/me/list/watching?page=1&limit=20",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "list", "watching"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"list",
+								"watching"
+							],
 							"query": [
-								{"key": "page", "value": "1"},
-								{"key": "limit", "value": "20"}
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
 							]
 						},
 						"description": "Get media I'm currently watching"
@@ -282,12 +457,27 @@
 				{
 					"name": "Get My Completed List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/users/me/list/completed",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "list", "completed"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"list",
+								"completed"
+							]
 						},
 						"description": "Get media I've completed"
 					}
@@ -295,12 +485,27 @@
 				{
 					"name": "Get My Plan to Watch",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/users/me/list/plan_to_watch",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "list", "plan_to_watch"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"list",
+								"plan_to_watch"
+							]
 						},
 						"description": "Get media I plan to watch"
 					}
@@ -308,17 +513,36 @@
 				{
 					"name": "Add to My List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"mediaId\": \"{{media_id}}\",\n  \"status\": \"watching\",\n  \"score\": 8.5,\n  \"notes\": \"Great anime!\",\n  \"episodesWatched\": 5\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/users/me/list",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "list"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"list"
+							]
 						},
 						"description": "Add media to my list. First import media from external API, then add to list."
 					}
@@ -326,17 +550,37 @@
 				{
 					"name": "Update List Item",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "PUT",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"status\": \"completed\",\n  \"score\": 9.0,\n  \"notes\": \"Amazing series!\",\n  \"episodesWatched\": 220\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/users/me/list/{{media_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "list", "{{media_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"list",
+								"{{media_id}}"
+							]
 						},
 						"description": "Update media status, score, or notes"
 					}
@@ -344,17 +588,38 @@
 				{
 					"name": "Update Progress",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "PATCH",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"episodesWatched\": 10\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/users/me/list/{{media_id}}/progress",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "list", "{{media_id}}", "progress"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"list",
+								"{{media_id}}",
+								"progress"
+							]
 						},
 						"description": "Update how many episodes you've watched"
 					}
@@ -362,27 +627,112 @@
 				{
 					"name": "Remove from My List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "DELETE",
 						"url": {
 							"raw": "{{base_url}}/users/me/list/{{media_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "list", "{{media_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"list",
+								"{{media_id}}"
+							]
 						},
 						"description": "Remove media from my list"
 					}
 				},
 				{
-					"name": "Get My Stats",
+					"name": "Get My Stats - General",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/users/me/stats",
-							"host": ["{{base_url}}"],
-							"path": ["users", "me", "stats"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"stats"
+							]
 						},
-						"description": "Get my statistics (total watched, avg score, etc.)"
+						"description": "Get general stats: count by status, total by type, time invested, ratings, streaks, and most active month/year"
+					}
+				},
+				{
+					"name": "Get My Stats - Genres",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/me/stats/genres",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"stats",
+								"genres"
+							]
+						},
+						"description": "Get genre distribution stats: top genres with count, percentage, and total time"
+					}
+				},
+				{
+					"name": "Get My Stats - Timeline",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/me/stats/timeline",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"stats",
+								"timeline"
+							]
+						},
+						"description": "Get timeline stats: monthly/yearly activity, streaks, last activity date, and most active periods"
 					}
 				}
 			]
@@ -396,11 +746,23 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/users/matills/list?page=1&limit=20",
-							"host": ["{{base_url}}"],
-							"path": ["users", "matills", "list"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"list"
+							],
 							"query": [
-								{"key": "page", "value": "1"},
-								{"key": "limit", "value": "20"}
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
 							]
 						},
 						"description": "View another user's public list"
@@ -412,8 +774,15 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/users/matills/list/completed",
-							"host": ["{{base_url}}"],
-							"path": ["users", "matills", "list", "completed"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"list",
+								"completed"
+							]
 						},
 						"description": "View another user's completed list"
 					}
@@ -426,15 +795,33 @@
 				{
 					"name": "Get My Custom Lists",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/lists?page=1&limit=20",
-							"host": ["{{base_url}}"],
-							"path": ["lists"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists"
+							],
 							"query": [
-								{"key": "page", "value": "1"},
-								{"key": "limit", "value": "20"}
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
 							]
 						},
 						"description": "Get all my custom lists"
@@ -457,17 +844,34 @@
 						}
 					],
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"name\": \"My Favorite Anime\",\n  \"description\": \"A collection of my all-time favorite anime series\",\n  \"isPublic\": true,\n  \"coverImageUrl\": null\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/lists",
-							"host": ["{{base_url}}"],
-							"path": ["lists"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists"
+							]
 						},
 						"description": "Create a new custom list"
 					}
@@ -478,8 +882,13 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/lists/{{list_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["lists", "{{list_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}"
+							]
 						},
 						"description": "Get a specific list (public or owned)"
 					}
@@ -487,17 +896,35 @@
 				{
 					"name": "Update List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "PUT",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"name\": \"My Favorite Anime (Updated)\",\n  \"description\": \"Updated description\",\n  \"isPublic\": false\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/lists/{{list_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["lists", "{{list_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}"
+							]
 						},
 						"description": "Update list metadata"
 					}
@@ -505,12 +932,25 @@
 				{
 					"name": "Delete List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "DELETE",
 						"url": {
 							"raw": "{{base_url}}/lists/{{list_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["lists", "{{list_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}"
+							]
 						},
 						"description": "Delete a custom list"
 					}
@@ -518,17 +958,36 @@
 				{
 					"name": "Add Item to List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"mediaId\": \"{{media_id}}\",\n  \"notes\": \"This is one of my favorites!\",\n  \"position\": 0\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/lists/{{list_id}}/items",
-							"host": ["{{base_url}}"],
-							"path": ["lists", "{{list_id}}", "items"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"items"
+							]
 						},
 						"description": "Add media to custom list"
 					}
@@ -536,17 +995,37 @@
 				{
 					"name": "Update List Item",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "PUT",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"position\": 5,\n  \"notes\": \"Updated notes\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/lists/{{list_id}}/items/{{media_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["lists", "{{list_id}}", "items", "{{media_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"items",
+								"{{media_id}}"
+							]
 						},
 						"description": "Update item position or notes"
 					}
@@ -554,12 +1033,27 @@
 				{
 					"name": "Remove Item from List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "DELETE",
 						"url": {
 							"raw": "{{base_url}}/lists/{{list_id}}/items/{{media_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["lists", "{{list_id}}", "items", "{{media_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"items",
+								"{{media_id}}"
+							]
 						},
 						"description": "Remove media from custom list"
 					}
@@ -567,17 +1061,36 @@
 				{
 					"name": "Reorder List",
 					"request": {
-						"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{access_token}}"}]},
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
 						"method": "PUT",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"itemIds\": [\n    \"media-id-1\",\n    \"media-id-2\",\n    \"media-id-3\"\n  ]\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/lists/{{list_id}}/reorder",
-							"host": ["{{base_url}}"],
-							"path": ["lists", "{{list_id}}", "reorder"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"reorder"
+							]
 						},
 						"description": "Reorder all items in list"
 					}
@@ -588,11 +1101,23 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/users/matills/lists?page=1&limit=20",
-							"host": ["{{base_url}}"],
-							"path": ["users", "matills", "lists"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"lists"
+							],
 							"query": [
-								{"key": "page", "value": "1"},
-								{"key": "limit", "value": "20"}
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
 							]
 						},
 						"description": "View another user's public custom lists"
@@ -609,13 +1134,29 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/media?search=naruto&type=anime&page=1&limit=20",
-							"host": ["{{base_url}}"],
-							"path": ["media"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"media"
+							],
 							"query": [
-								{"key": "search", "value": "naruto"},
-								{"key": "type", "value": "anime"},
-								{"key": "page", "value": "1"},
-								{"key": "limit", "value": "20"}
+								{
+									"key": "search",
+									"value": "naruto"
+								},
+								{
+									"key": "type",
+									"value": "anime"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
 							]
 						},
 						"description": "Search media in your database (not external APIs)"
@@ -627,8 +1168,13 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/media/trending",
-							"host": ["{{base_url}}"],
-							"path": ["media", "trending"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"media",
+								"trending"
+							]
 						}
 					}
 				},
@@ -638,8 +1184,13 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/media/popular",
-							"host": ["{{base_url}}"],
-							"path": ["media", "popular"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"media",
+								"popular"
+							]
 						}
 					}
 				},
@@ -649,8 +1200,13 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/media/{{media_id}}",
-							"host": ["{{base_url}}"],
-							"path": ["media", "{{media_id}}"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"media",
+								"{{media_id}}"
+							]
 						}
 					}
 				},
@@ -660,8 +1216,14 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/media/{{media_id}}/seasons",
-							"host": ["{{base_url}}"],
-							"path": ["media", "{{media_id}}", "seasons"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"media",
+								"{{media_id}}",
+								"seasons"
+							]
 						}
 					}
 				},
@@ -671,8 +1233,16 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}/media/{{media_id}}/seasons/1/episodes",
-							"host": ["{{base_url}}"],
-							"path": ["media", "{{media_id}}", "seasons", "1", "episodes"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"media",
+								"{{media_id}}",
+								"seasons",
+								"1",
+								"episodes"
+							]
 						}
 					}
 				}
@@ -688,9 +1258,13 @@
 						"url": {
 							"raw": "http://localhost:3000/health",
 							"protocol": "http",
-							"host": ["localhost"],
+							"host": [
+								"localhost"
+							],
 							"port": "3000",
-							"path": ["health"]
+							"path": [
+								"health"
+							]
 						}
 					}
 				},
@@ -700,7 +1274,9 @@
 						"method": "GET",
 						"url": {
 							"raw": "{{base_url}}",
-							"host": ["{{base_url}}"]
+							"host": [
+								"{{base_url}}"
+							]
 						}
 					}
 				}
