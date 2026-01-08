@@ -220,6 +220,40 @@ export class UserController {
   }
 
   /**
+   * Search users by username or display name
+   * GET /api/users/search?q=query&page=1&limit=20
+   * Sprint 7: User search functionality
+   */
+  async searchUsers(req: AuthRequest, res: Response): Promise<void> {
+    try {
+      const query = (req.query.q as string) || '';
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 20;
+
+      if (!query || query.trim().length < 2) {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Search query must be at least 2 characters',
+        });
+        return;
+      }
+
+      const result = await userService.searchUsers(query.trim(), page, limit);
+
+      res.status(200).json({
+        message: 'Users found',
+        ...result,
+      });
+    } catch (error) {
+      logger.error('Search users error:', error);
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: 'Failed to search users',
+      });
+    }
+  }
+
+  /**
    * Get current user general statistics
    * GET /api/users/me/stats
    * Sprint 6: Comprehensive user statistics

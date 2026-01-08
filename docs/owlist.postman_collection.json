@@ -1126,6 +1126,142 @@
 			]
 		},
 		{
+			"name": "User Profiles & Search (Sprint 7)",
+			"item": [
+				{
+					"name": "Search Users",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/search?q=test&page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "test",
+									"description": "Search query (min 2 characters)"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Search users by username or display name"
+					}
+				},
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills"
+							]
+						},
+						"description": "Get public profile of a user by username. Returns 403 if profile is private."
+					}
+				},
+				{
+					"name": "Get User Stats",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills/stats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"stats"
+							]
+						},
+						"description": "Get basic statistics of a user (count by status). Returns 403 if profile is private."
+					}
+				},
+				{
+					"name": "Get User Custom Lists",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills/lists?page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"lists"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get public custom lists of a user"
+					}
+				},
+				{
+					"name": "Update My Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"newusername\",\n  \"displayName\": \"New Display Name\",\n  \"bio\": \"This is my bio\",\n  \"avatarUrl\": \"https://example.com/avatar.jpg\",\n  \"bannerUrl\": \"https://example.com/banner.jpg\",\n  \"isPrivate\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						},
+						"description": "Update current user profile (bio, avatar, banner, privacy settings)"
+					}
+				}
+			]
+		},
+		{
 			"name": "Media (Database)",
 			"item": [
 				{

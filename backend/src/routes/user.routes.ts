@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { userController } from '../controllers/user.controller';
+import { customListController } from '../controllers/custom-list.controller';
 import { authenticate, optionalAuth } from '../middlewares/auth';
 import { validate } from '../middlewares/validate';
 import {
@@ -77,6 +78,15 @@ router.get('/me/stats/timeline', authenticate, (req, res) =>
 );
 
 /**
+ * @route GET /api/users/search
+ * @desc Search users by username or display name
+ * @query q: search query
+ * @access Public
+ * Sprint 7: User search functionality
+ */
+router.get('/search', (req, res) => userController.searchUsers(req, res));
+
+/**
  * @route GET /api/users/:username
  * @desc Get user profile by username (public)
  * @access Public (with optional auth)
@@ -92,6 +102,16 @@ router.get('/:username', optionalAuth, (req, res) =>
  */
 router.get('/:username/stats', optionalAuth, (req, res) =>
   userController.getUserStats(req, res)
+);
+
+/**
+ * @route GET /api/users/:username/lists
+ * @desc Get user's public custom lists
+ * @access Public
+ * Sprint 7: Public profile lists
+ */
+router.get('/:username/lists', (req, res) =>
+  customListController.getPublicListsByUsername(req, res)
 );
 
 export default router;

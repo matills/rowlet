@@ -169,6 +169,60 @@ export class UserService {
       throw error;
     }
   }
+
+  /**
+   * Search users by username or display name
+   * Sprint 7: User search functionality
+   */
+  async searchUsers(query: string, page = 1, limit = 20) {
+    try {
+      const offset = (page - 1) * limit;
+
+      // Search by username or display_name (case-insensitive)
+      // Only return public profiles or show basic info for private profiles
+      const { data, error, count } = await supabaseAdmin
+        .from('users')
+        .select(
+          'id, username, display_name, bio, avatar_url, is_private, created_at',
+          { count: 'exact' }
+        )
+        .or(`username.ilike.%${query}%,display_name.ilike.%${query}%`)
+        .order('username', { ascending: true })
+        .range(offset, offset + limit - 1);
+
+      if (error) {
+        logger.error('Error searching users:', error);
+        throw error;
+      }
+
+      // Filter out sensitive info for private profiles
+      const results = data?.map((user) => {
+        if (user.is_private) {
+          return {
+            id: user.id,
+            username: user.username,
+            display_name: user.display_name,
+            avatar_url: user.avatar_url,
+            is_private: user.is_private,
+          };
+        }
+        return user;
+      });
+
+      return {
+        data: results || [],
+        pagination: {
+          page,
+          limit,
+          total: count || 0,
+          totalPages: Math.ceil((count || 0) / limit),
+        },
+      };
+    } catch (error) {
+      logger.error('Search users error:', error);
+      throw error;
+    }
+  }
 }
 
 export const userService = new UserService();
