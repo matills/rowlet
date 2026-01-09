@@ -1,5 +1,6 @@
 import { supabase } from '../config/supabase';
 import { logger } from '../config/logger';
+import { activityService } from './activity.service';
 import type {
   AddToListInput,
   UpdateListItemInput,
@@ -166,6 +167,13 @@ export class UserListService {
       throw new Error('Failed to add to list');
     }
 
+    if (input.status === 'completed') {
+      await activityService.trackMediaWatched(userId, input.mediaId);
+    }
+    if (input.score !== null && input.score !== undefined) {
+      await activityService.trackMediaRated(userId, input.mediaId, input.score);
+    }
+
     return data;
   }
 
@@ -238,6 +246,13 @@ export class UserListService {
     if (error) {
       logger.error('Error updating list item:', error);
       throw new Error('Failed to update list item');
+    }
+
+    if (input.status === 'completed' && existing.status !== 'completed') {
+      await activityService.trackMediaWatched(userId, mediaId);
+    }
+    if (input.score !== null && input.score !== undefined) {
+      await activityService.trackMediaRated(userId, mediaId, input.score);
     }
 
     return data;

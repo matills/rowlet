@@ -1,5 +1,6 @@
 import { supabase } from '../config/supabase';
 import { logger } from '../config/logger';
+import { activityService } from './activity.service';
 import type {
   CreateCustomListInput,
   UpdateCustomListInput,
@@ -117,6 +118,8 @@ export class CustomListService {
       logger.error('Error creating list:', error);
       throw new Error('Failed to create list');
     }
+
+    await activityService.trackListCreated(userId, data.id);
 
     return data;
   }
@@ -283,6 +286,8 @@ export class CustomListService {
       throw new Error('Failed to add item to list');
     }
 
+    await activityService.trackAddedToList(userId, input.mediaId, listId);
+
     return data;
   }
 
@@ -379,6 +384,8 @@ export class CustomListService {
       logger.error('Error removing item from list:', error);
       throw new Error('Failed to remove item from list');
     }
+
+    await activityService.trackRemovedFromList(userId, mediaId, listId);
 
     return { success: true };
   }

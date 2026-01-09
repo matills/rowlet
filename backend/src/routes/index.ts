@@ -4,6 +4,7 @@ import userRoutes from './user.routes';
 import userListRoutes from './user-list.routes';
 import customListRoutes from './custom-list.routes';
 import collaboratorRoutes from './collaborator.routes';
+import activityRoutes from './activity.routes';
 import mediaRoutes from './media.routes';
 import externalRoutes from './external.routes';
 import { customListController } from '../controllers/custom-list.controller';
@@ -20,6 +21,7 @@ router.get('/users/:username/lists', (req, res) =>
 
 router.use('/lists', customListRoutes);
 router.use('/', collaboratorRoutes);
+router.use('/', activityRoutes);
 router.use('/media', mediaRoutes);
 router.use('/external', externalRoutes);
 

@@ -1,5 +1,6 @@
 import { supabaseAdmin } from '../config/supabase';
 import { logger } from '../config/logger';
+import { activityService } from './activity.service';
 import type { FollowUser, FollowCounts, FollowStatus, PaginatedFollows } from '../types/follow.types';
 
 export class FollowService {
@@ -44,6 +45,8 @@ export class FollowService {
         logger.error('Error creating follow:', insertError);
         throw new Error('Failed to follow user');
       }
+
+      await activityService.trackUserFollowed(followerId, targetUser.id);
     } catch (error) {
       logger.error('Follow user error:', error);
       throw error;
