@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { userController } from '../controllers/user.controller';
 import { customListController } from '../controllers/custom-list.controller';
+import { followController } from '../controllers/follow.controller';
 import { authenticate, optionalAuth } from '../middlewares/auth';
 import { validate } from '../middlewares/validate';
 import {
@@ -112,6 +113,56 @@ router.get('/:username/stats', optionalAuth, (req, res) =>
  */
 router.get('/:username/lists', (req, res) =>
   customListController.getPublicListsByUsername(req, res)
+);
+
+/**
+ * @route POST /api/users/:username/follow
+ * @desc Follow a user
+ * @access Private
+ * Sprint 8: Follow system
+ */
+router.post('/:username/follow', authenticate, (req, res) =>
+  followController.followUser(req, res)
+);
+
+/**
+ * @route DELETE /api/users/:username/unfollow
+ * @desc Unfollow a user
+ * @access Private
+ * Sprint 8: Follow system
+ */
+router.delete('/:username/unfollow', authenticate, (req, res) =>
+  followController.unfollowUser(req, res)
+);
+
+/**
+ * @route GET /api/users/:username/followers
+ * @desc Get user's followers list
+ * @access Public
+ * Sprint 8: Follow system
+ */
+router.get('/:username/followers', (req, res) =>
+  followController.getFollowers(req, res)
+);
+
+/**
+ * @route GET /api/users/:username/following
+ * @desc Get list of users that this user is following
+ * @access Public
+ * Sprint 8: Follow system
+ */
+router.get('/:username/following', (req, res) =>
+  followController.getFollowing(req, res)
+);
+
+/**
+ * @route GET /api/users/:username/is-following
+ * @desc Check if current user is following target user
+ * @access Private
+ * Sprint 8: Follow system
+ */
+router.get('/:username/is-following', authenticate, (req, res) =>
+  followController.checkFollowStatus(req, res)
 );
 
 export default router;

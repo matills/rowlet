@@ -27,7 +27,6 @@ export class AuthController {
     } catch (error: any) {
       logger.error('Register controller error:', error);
 
-      // Check for email provider disabled
       if (error.code === 'email_provider_disabled' || error.message?.includes('Email signups are disabled')) {
         res.status(422).json({
           error: 'Unprocessable Entity',
@@ -37,7 +36,6 @@ export class AuthController {
         return;
       }
 
-      // Handle specific Supabase errors
       if (error.message?.includes('already registered')) {
         res.status(409).json({
           error: 'Conflict',
@@ -84,7 +82,6 @@ export class AuthController {
     } catch (error: any) {
       logger.error('Login controller error:', error);
 
-      // Check for email provider disabled
       if (error.code === 'email_provider_disabled' || error.message?.includes('Email logins are disabled')) {
         res.status(422).json({
           error: 'Unprocessable Entity',
@@ -94,7 +91,6 @@ export class AuthController {
         return;
       }
 
-      // Check for email not confirmed error
       if (error.code === 'email_not_confirmed' || error.message?.includes('Email not confirmed')) {
         res.status(403).json({
           error: 'Forbidden',

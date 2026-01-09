@@ -1262,6 +1262,147 @@
 			]
 		},
 		{
+			"name": "Follow System (Sprint 8)",
+			"item": [
+				{
+					"name": "Follow User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/users/matills/follow",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"follow"
+							]
+						},
+						"description": "Follow a user by username. Returns 400 if already following or trying to follow yourself."
+					}
+				},
+				{
+					"name": "Unfollow User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"method": "DELETE",
+						"url": {
+							"raw": "{{base_url}}/users/matills/unfollow",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"unfollow"
+							]
+						},
+						"description": "Unfollow a user by username."
+					}
+				},
+				{
+					"name": "Get User Followers",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills/followers?page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"followers"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get list of users following this user (public access)"
+					}
+				},
+				{
+					"name": "Get User Following",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills/following?page=1&limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"following"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "20"
+								}
+							]
+						},
+						"description": "Get list of users that this user is following (public access)"
+					}
+				},
+				{
+					"name": "Check Follow Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}"
+								}
+							]
+						},
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/users/matills/is-following",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"matills",
+								"is-following"
+							]
+						},
+						"description": "Check if you are following this user and if they follow you back. Returns { isFollowing: boolean, isFollowedBy: boolean }"
+					}
+				}
+			]
+		},
 			"name": "Media (Database)",
 			"item": [
 				{

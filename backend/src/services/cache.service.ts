@@ -22,18 +22,15 @@ export class CacheService {
     ttl: number = this.TTL.MEDIUM
   ): Promise<T> {
     try {
-      // Try to get from cache
       const cached = await redis.get<T>(key);
       if (cached !== null) {
         logger.debug(`Cache hit: ${key}`);
         return cached;
       }
 
-      // Cache miss - fetch data
       logger.debug(`Cache miss: ${key}`);
       const data = await fetchFn();
 
-      // Store in cache (fire and forget)
       redis.set(key, data, ttl).catch((err) => {
         logger.error(`Failed to cache ${key}:`, err);
       });
@@ -41,7 +38,6 @@ export class CacheService {
       return data;
     } catch (error) {
       logger.error(`Cache getOrFetch error for ${key}:`, error);
-      // If cache fails, still try to fetch the data
       return fetchFn();
     }
   }
@@ -74,7 +70,6 @@ export class CacheService {
    * Cache keys for external APIs
    */
   keys = {
-    // TMDB
     tmdbMovie: (id: number) => `tmdb:movie:${id}`,
     tmdbSeries: (id: number) => `tmdb:series:${id}`,
     tmdbSeason: (seriesId: number, seasonNumber: number) =>
@@ -88,7 +83,6 @@ export class CacheService {
     tmdbTrending: (type: string, timeWindow: string, page: number) =>
       `tmdb:trending:${type}:${timeWindow}:${page}`,
 
-    // AniList
     anilistAnime: (id: number) => `anilist:anime:${id}`,
     anilistSearch: (query: string, page: number) =>
       `anilist:search:${query}:${page}`,
@@ -97,7 +91,6 @@ export class CacheService {
     anilistGenre: (genre: string, page: number) =>
       `anilist:genre:${genre}:${page}`,
 
-    // Media from DB
     media: (id: string) => `media:${id}`,
     mediaSearch: (params: string) => `media:search:${params}`,
   };

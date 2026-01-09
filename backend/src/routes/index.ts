@@ -9,21 +9,18 @@ import { customListController } from '../controllers/custom-list.controller';
 
 const router = Router();
 
-// API Routes
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
-router.use('/users', userListRoutes); // User media list endpoints
+router.use('/users', userListRoutes);
 
-// Public route for user's custom lists (must be before /lists to avoid route conflict)
 router.get('/users/:username/lists', (req, res) =>
   customListController.getPublicListsByUsername(req, res)
 );
 
-router.use('/lists', customListRoutes); // Custom lists endpoints
+router.use('/lists', customListRoutes);
 router.use('/media', mediaRoutes);
 router.use('/external', externalRoutes);
 
-// Health check (already in main index.ts, but can be here too)
 router.get('/health', (req, res) => {
   res.status(200).json({
     status: 'ok',

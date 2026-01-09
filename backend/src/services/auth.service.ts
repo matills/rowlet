@@ -8,7 +8,6 @@ export class AuthService {
    */
   async register(data: RegisterInput) {
     try {
-      // Create user in Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -29,8 +28,6 @@ export class AuthService {
         throw new Error('User creation failed');
       }
 
-      // Check if user profile was created (via trigger)
-      // Wait a bit for the trigger to complete
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const { data: profile, error: profileError } = await supabaseAdmin
@@ -74,7 +71,6 @@ export class AuthService {
         throw new Error('Login failed');
       }
 
-      // Get user profile
       const { data: profile, error: profileError } = await supabaseAdmin
         .from('users')
         .select('*')
@@ -152,7 +148,6 @@ export class AuthService {
         throw new Error('User not found');
       }
 
-      // Get user profile
       const { data: profile, error: profileError } = await supabaseAdmin
         .from('users')
         .select('*')

@@ -38,7 +38,6 @@ export const logger = winston.createLogger({
   ],
 });
 
-// Create logs directory if it doesn't exist
 if (process.env.NODE_ENV !== 'production') {
   logger.debug('Logger initialized in development mode');
 }

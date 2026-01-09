@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { userService } from '../services/user.service';
 import { userStatsService } from '../services/user-stats.service';
+import { followService } from '../services/follow.service';
 import { logger } from '../config/logger';
 import type { AuthRequest } from '../middlewares/auth';
 import type {
@@ -25,8 +26,14 @@ export class UserController {
 
       const profile = await userService.getUserProfile(req.user.id);
 
+      const followCounts = await followService.getFollowCounts(req.user.id);
+
       res.status(200).json({
-        user: profile,
+        user: {
+          ...profile,
+          followers_count: followCounts.followers_count,
+          following_count: followCounts.following_count,
+        },
       });
     } catch (error) {
       logger.error('Get me error:', error);
@@ -145,7 +152,6 @@ export class UserController {
 
       const profile = await userService.getUserByUsername(username);
 
-      // Check if profile is private and user is not the owner
       if (profile.is_private && (!req.user || req.user.id !== profile.id)) {
         res.status(403).json({
           error: 'Forbidden',
@@ -154,7 +160,8 @@ export class UserController {
         return;
       }
 
-      // Don't return sensitive information for public profiles
+      const followCounts = await followService.getFollowCounts(profile.id);
+
       const publicProfile = {
         id: profile.id,
         username: profile.username,
@@ -163,6 +170,8 @@ export class UserController {
         avatar_url: profile.avatar_url,
         banner_url: profile.banner_url,
         created_at: profile.created_at,
+        followers_count: followCounts.followers_count,
+        following_count: followCounts.following_count,
       };
 
       res.status(200).json({
@@ -196,7 +205,6 @@ export class UserController {
 
       const profile = await userService.getUserByUsername(username);
 
-      // Check if profile is private and user is not the owner
       if (profile.is_private && (!req.user || req.user.id !== profile.id)) {
         res.status(403).json({
           error: 'Forbidden',

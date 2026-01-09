@@ -30,9 +30,8 @@ export const authenticate = async (
       return;
     }
 
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    const token = authHeader.substring(7);
 
-    // Verify token with Supabase
     const {
       data: { user },
       error,
@@ -47,7 +46,6 @@ export const authenticate = async (
       return;
     }
 
-    // Add user info to request
     req.user = {
       id: user.id,
       email: user.email || '',
