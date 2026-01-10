@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { userController } from '../controllers/user.controller';
 import { customListController } from '../controllers/custom-list.controller';
 import { followController } from '../controllers/follow.controller';
+import { achievementController } from '../controllers/achievement.controller';
 import { authenticate, optionalAuth } from '../middlewares/auth';
 import { validate } from '../middlewares/validate';
 import {
@@ -76,6 +77,46 @@ router.get('/me/stats/genres', authenticate, (req, res) =>
  */
 router.get('/me/stats/timeline', authenticate, (req, res) =>
   userController.getMyStatsTimeline(req, res)
+);
+
+/**
+ * @route GET /api/users/me/achievements
+ * @desc Get current user achievements
+ * @access Private
+ * Sprint 11: User achievements
+ */
+router.get('/me/achievements', authenticate, (req, res) =>
+  achievementController.getMyAchievements(req, res)
+);
+
+/**
+ * @route GET /api/users/me/achievements/progress
+ * @desc Get current user achievement progress summary
+ * @access Private
+ * Sprint 11: Achievement progress
+ */
+router.get('/me/achievements/progress', authenticate, (req, res) =>
+  achievementController.getMyAchievementProgress(req, res)
+);
+
+/**
+ * @route GET /api/users/me/xp
+ * @desc Get current user XP and level
+ * @access Private
+ * Sprint 11: User XP and leveling
+ */
+router.get('/me/xp', authenticate, (req, res) =>
+  achievementController.getMyXP(req, res)
+);
+
+/**
+ * @route POST /api/users/me/achievements/evaluate
+ * @desc Manually trigger achievement evaluation (testing/debug)
+ * @access Private
+ * Sprint 11: Manual achievement evaluation
+ */
+router.post('/me/achievements/evaluate', authenticate, (req, res) =>
+  achievementController.evaluateMyAchievements(req, res)
 );
 
 /**
@@ -163,6 +204,16 @@ router.get('/:username/following', (req, res) =>
  */
 router.get('/:username/is-following', authenticate, (req, res) =>
   followController.checkFollowStatus(req, res)
+);
+
+/**
+ * @route GET /api/users/:username/achievements
+ * @desc Get public achievements for a user
+ * @access Public
+ * Sprint 11: Public user achievements
+ */
+router.get('/:username/achievements', (req, res) =>
+  achievementController.getUserAchievements(req, res)
 );
 
 export default router;

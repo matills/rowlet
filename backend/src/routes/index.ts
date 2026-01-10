@@ -7,6 +7,7 @@ import collaboratorRoutes from './collaborator.routes';
 import activityRoutes from './activity.routes';
 import mediaRoutes from './media.routes';
 import externalRoutes from './external.routes';
+import achievementRoutes from './achievement.routes';
 import { customListController } from '../controllers/custom-list.controller';
 
 const router = Router();
@@ -24,6 +25,7 @@ router.use('/', collaboratorRoutes);
 router.use('/', activityRoutes);
 router.use('/media', mediaRoutes);
 router.use('/external', externalRoutes);
+router.use('/achievements', achievementRoutes);
 
 router.get('/health', (req, res) => {
   res.status(200).json({

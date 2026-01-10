@@ -1,0 +1,461 @@
+[
+  {
+    "key": "first_steps",
+    "name": "First Steps",
+    "description": "Watch your first content",
+    "rarity": "common",
+    "xp_reward": 10,
+    "condition_type": "watched_count",
+    "condition_data": {
+      "type": "watched_count",
+      "required_count": 1,
+      "status": "completed"
+    },
+    "display_order": 1,
+    "is_hidden": false
+  },
+  {
+    "key": "getting_started",
+    "name": "Getting Started",
+    "description": "Watch 10 pieces of content",
+    "rarity": "common",
+    "xp_reward": 25,
+    "condition_type": "watched_count",
+    "condition_data": {
+      "type": "watched_count",
+      "required_count": 10,
+      "status": "completed"
+    },
+    "display_order": 2,
+    "is_hidden": false
+  },
+  {
+    "key": "dedicated",
+    "name": "Dedicated",
+    "description": "Watch 50 pieces of content",
+    "rarity": "common",
+    "xp_reward": 50,
+    "condition_type": "watched_count",
+    "condition_data": {
+      "type": "watched_count",
+      "required_count": 50,
+      "status": "completed"
+    },
+    "display_order": 3,
+    "is_hidden": false
+  },
+  {
+    "key": "enthusiast",
+    "name": "Enthusiast",
+    "description": "Watch 100 pieces of content",
+    "rarity": "rare",
+    "xp_reward": 100,
+    "condition_type": "watched_count",
+    "condition_data": {
+      "type": "watched_count",
+      "required_count": 100,
+      "status": "completed"
+    },
+    "display_order": 4,
+    "is_hidden": false
+  },
+  {
+    "key": "completionist",
+    "name": "Completionist",
+    "description": "Watch 500 pieces of content",
+    "rarity": "epic",
+    "xp_reward": 500,
+    "condition_type": "watched_count",
+    "condition_data": {
+      "type": "watched_count",
+      "required_count": 500,
+      "status": "completed"
+    },
+    "display_order": 5,
+    "is_hidden": false
+  },
+  {
+    "key": "movie_buff",
+    "name": "Movie Buff",
+    "description": "Watch 50 movies",
+    "rarity": "common",
+    "xp_reward": 75,
+    "condition_type": "watched_count",
+    "condition_data": {
+      "type": "watched_count",
+      "required_count": 50,
+      "media_type": "movie",
+      "status": "completed"
+    },
+    "display_order": 10,
+    "is_hidden": false
+  },
+  {
+    "key": "binge_watcher",
+    "name": "Binge Watcher",
+    "description": "Complete 25 series",
+    "rarity": "rare",
+    "xp_reward": 150,
+    "condition_type": "completion",
+    "condition_data": {
+      "type": "completion",
+      "required_count": 25,
+      "media_type": "series"
+    },
+    "display_order": 11,
+    "is_hidden": false
+  },
+  {
+    "key": "otaku",
+    "name": "Otaku",
+    "description": "Watch 50 anime",
+    "rarity": "rare",
+    "xp_reward": 100,
+    "condition_type": "watched_count",
+    "condition_data": {
+      "type": "watched_count",
+      "required_count": 50,
+      "media_type": "anime",
+      "status": "completed"
+    },
+    "display_order": 12,
+    "is_hidden": false
+  },
+  {
+    "key": "weekend_warrior",
+    "name": "Weekend Warrior",
+    "description": "Watch 5+ contents in a single weekend",
+    "rarity": "common",
+    "xp_reward": 30,
+    "condition_type": "watched_count_timeframe",
+    "condition_data": {
+      "type": "watched_count_timeframe",
+      "required_count": 5,
+      "timeframe_hours": 48
+    },
+    "display_order": 20,
+    "is_hidden": false
+  },
+  {
+    "key": "marathoner",
+    "name": "Marathoner",
+    "description": "Watch 8+ contents in a single weekend",
+    "rarity": "rare",
+    "xp_reward": 75,
+    "condition_type": "watched_count_timeframe",
+    "condition_data": {
+      "type": "watched_count_timeframe",
+      "required_count": 8,
+      "timeframe_hours": 48
+    },
+    "display_order": 21,
+    "is_hidden": false
+  },
+  {
+    "key": "weekly_streak",
+    "name": "Weekly Streak",
+    "description": "Watch something every week for 4 weeks",
+    "rarity": "common",
+    "xp_reward": 40,
+    "condition_type": "streak",
+    "condition_data": {
+      "type": "streak",
+      "required_count": 4,
+      "period": "week"
+    },
+    "display_order": 22,
+    "is_hidden": false
+  },
+  {
+    "key": "monthly_streak",
+    "name": "Monthly Streak",
+    "description": "Watch something every month for 6 months",
+    "rarity": "rare",
+    "xp_reward": 120,
+    "condition_type": "streak",
+    "condition_data": {
+      "type": "streak",
+      "required_count": 6,
+      "period": "month"
+    },
+    "display_order": 23,
+    "is_hidden": false
+  },
+  {
+    "key": "critic",
+    "name": "Critic",
+    "description": "Rate 10 pieces of content",
+    "rarity": "common",
+    "xp_reward": 20,
+    "condition_type": "rating_count",
+    "condition_data": {
+      "type": "rating_count",
+      "required_count": 10
+    },
+    "display_order": 30,
+    "is_hidden": false
+  },
+  {
+    "key": "expert_critic",
+    "name": "Expert Critic",
+    "description": "Rate 100 pieces of content",
+    "rarity": "rare",
+    "xp_reward": 100,
+    "condition_type": "rating_count",
+    "condition_data": {
+      "type": "rating_count",
+      "required_count": 100
+    },
+    "display_order": 31,
+    "is_hidden": false
+  },
+  {
+    "key": "harsh_critic",
+    "name": "Harsh Critic",
+    "description": "Give 10 ratings of 3 or less",
+    "rarity": "common",
+    "xp_reward": 25,
+    "condition_type": "rating_value",
+    "condition_data": {
+      "type": "rating_value",
+      "required_count": 10,
+      "max_rating": 3
+    },
+    "display_order": 32,
+    "is_hidden": false
+  },
+  {
+    "key": "easy_to_please",
+    "name": "Easy to Please",
+    "description": "Give 10 ratings of 9 or more",
+    "rarity": "common",
+    "xp_reward": 25,
+    "condition_type": "rating_value",
+    "condition_data": {
+      "type": "rating_value",
+      "required_count": 10,
+      "min_rating": 9
+    },
+    "display_order": 33,
+    "is_hidden": false
+  },
+  {
+    "key": "genre_explorer",
+    "name": "Genre Explorer",
+    "description": "Watch content from 10 different genres",
+    "rarity": "rare",
+    "xp_reward": 75,
+    "condition_type": "genre_diversity",
+    "condition_data": {
+      "type": "genre_diversity",
+      "required_genre_count": 10
+    },
+    "display_order": 40,
+    "is_hidden": false
+  },
+  {
+    "key": "polyglot",
+    "name": "Polyglot",
+    "description": "Watch content in 5 different languages",
+    "rarity": "rare",
+    "xp_reward": 100,
+    "condition_type": "language_diversity",
+    "condition_data": {
+      "type": "language_diversity",
+      "required_language_count": 5
+    },
+    "display_order": 41,
+    "is_hidden": false
+  },
+  {
+    "key": "classic_fan",
+    "name": "Classic Fan",
+    "description": "Watch 10 movies from before the year 2000",
+    "rarity": "rare",
+    "xp_reward": 80,
+    "condition_type": "year_filter",
+    "condition_data": {
+      "type": "year_filter",
+      "required_count": 10,
+      "before_year": 2000
+    },
+    "display_order": 42,
+    "is_hidden": false
+  },
+  {
+    "key": "modern_viewer",
+    "name": "Modern Viewer",
+    "description": "Watch 50 contents from the current year",
+    "rarity": "common",
+    "xp_reward": 60,
+    "condition_type": "year_filter",
+    "condition_data": {
+      "type": "year_filter",
+      "required_count": 50,
+      "after_year": 2024
+    },
+    "display_order": 43,
+    "is_hidden": false
+  },
+  {
+    "key": "international",
+    "name": "International",
+    "description": "Watch content from 20 different countries",
+    "rarity": "epic",
+    "xp_reward": 200,
+    "condition_type": "country_diversity",
+    "condition_data": {
+      "type": "country_diversity",
+      "required_country_count": 20
+    },
+    "display_order": 44,
+    "is_hidden": false
+  },
+  {
+    "key": "popular",
+    "name": "Popular",
+    "description": "Have 10 followers",
+    "rarity": "common",
+    "xp_reward": 30,
+    "condition_type": "social",
+    "condition_data": {
+      "type": "social",
+      "metric": "followers",
+      "required_count": 10
+    },
+    "display_order": 50,
+    "is_hidden": false
+  },
+  {
+    "key": "influencer",
+    "name": "Influencer",
+    "description": "Have 100 followers",
+    "rarity": "epic",
+    "xp_reward": 250,
+    "condition_type": "social",
+    "condition_data": {
+      "type": "social",
+      "metric": "followers",
+      "required_count": 100
+    },
+    "display_order": 51,
+    "is_hidden": false
+  },
+  {
+    "key": "social_butterfly",
+    "name": "Social Butterfly",
+    "description": "Follow 50 users",
+    "rarity": "common",
+    "xp_reward": 25,
+    "condition_type": "social",
+    "condition_data": {
+      "type": "social",
+      "metric": "following",
+      "required_count": 50
+    },
+    "display_order": 52,
+    "is_hidden": false
+  },
+  {
+    "key": "list_master",
+    "name": "List Master",
+    "description": "Create 10 custom lists",
+    "rarity": "rare",
+    "xp_reward": 75,
+    "condition_type": "list_creation",
+    "condition_data": {
+      "type": "list_creation",
+      "required_count": 10
+    },
+    "display_order": 53,
+    "is_hidden": false
+  },
+  {
+    "key": "collaborator",
+    "name": "Collaborator",
+    "description": "Participate in 5 collaborative lists",
+    "rarity": "rare",
+    "xp_reward": 60,
+    "condition_type": "collaboration",
+    "condition_data": {
+      "type": "collaboration",
+      "required_count": 5
+    },
+    "display_order": 54,
+    "is_hidden": false
+  },
+  {
+    "key": "night_owl",
+    "name": "Night Owl",
+    "description": "Watch 50 contents between 12am-6am",
+    "rarity": "rare",
+    "xp_reward": 80,
+    "condition_type": "time_of_day",
+    "condition_data": {
+      "type": "time_of_day",
+      "required_count": 50,
+      "start_hour": 0,
+      "end_hour": 6
+    },
+    "display_order": 60,
+    "is_hidden": false
+  },
+  {
+    "key": "early_bird",
+    "name": "Early Bird",
+    "description": "Watch 50 contents between 6am-9am",
+    "rarity": "rare",
+    "xp_reward": 80,
+    "condition_type": "time_of_day",
+    "condition_data": {
+      "type": "time_of_day",
+      "required_count": 50,
+      "start_hour": 6,
+      "end_hour": 9
+    },
+    "display_order": 61,
+    "is_hidden": false
+  },
+  {
+    "key": "perfect_score",
+    "name": "Perfect Score",
+    "description": "Give 100 ratings of 10/10",
+    "rarity": "epic",
+    "xp_reward": 150,
+    "condition_type": "perfect_score",
+    "condition_data": {
+      "type": "perfect_score",
+      "required_count": 100
+    },
+    "display_order": 62,
+    "is_hidden": false
+  },
+  {
+    "key": "speed_watcher",
+    "name": "Speed Watcher",
+    "description": "Complete a series of 20+ episodes in 48 hours",
+    "rarity": "epic",
+    "xp_reward": 200,
+    "condition_type": "speed_watching",
+    "condition_data": {
+      "type": "speed_watching",
+      "min_episodes": 20,
+      "max_hours": 48
+    },
+    "display_order": 63,
+    "is_hidden": false
+  },
+  {
+    "key": "completionist_pro",
+    "name": "Completionist Pro",
+    "description": "Unlock all achievements",
+    "rarity": "legendary",
+    "xp_reward": 1000,
+    "condition_type": "manual",
+    "condition_data": {
+      "type": "manual"
+    },
+    "display_order": 999,
+    "is_hidden": true
+  }
+]

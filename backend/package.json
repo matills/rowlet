@@ -11,7 +11,8 @@
     "test:watch": "jest --watch",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx src/scripts/seed.ts",
+    "seed:achievements": "tsx src/scripts/seed-achievements.ts"
   },
   "keywords": [
     "tracking",
