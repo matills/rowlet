@@ -21,7 +21,6 @@ export class CustomListService {
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
-    // Filter by privacy if specified
     if (isPublic !== undefined) {
       query = query.eq('is_public', isPublic);
     }
@@ -63,7 +62,6 @@ export class CustomListService {
       throw new Error('This list is private');
     }
 
-    // Get list items with media info
     const { data: items, error: itemsError } = await supabase
       .from('custom_list_items')
       .select(

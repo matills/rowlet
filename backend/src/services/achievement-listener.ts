@@ -341,15 +341,12 @@ class AchievementEventListener {
   }
 }
 
-// Export singleton instance
 export const achievementListener = new AchievementEventListener();
 
-// Export helper to easily access the event emitter
 export const emitAchievementEvent = (event: AchievementEvent, payload: any) => {
   achievementListener.emit(event, payload);
 };
 
-// Export convenience helpers
 export const emitMediaCompleted = (userId: string, mediaId: string, mediaType: 'movie' | 'series' | 'anime') => {
   achievementListener.emitMediaCompleted(userId, mediaId, mediaType);
 };

@@ -280,5 +280,4 @@ export class AchievementController {
   }
 }
 
-// Export singleton instance
 export const achievementController = new AchievementController();

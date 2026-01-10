@@ -1,14 +1,11 @@
 /**
  * Achievement Seeding Script
- * Sprint 11 - Motor de Logros
  *
- * This script seeds the achievements table with predefined achievements
+ * Seeds the achievements table with predefined achievements
  * from the achievement-definitions.json file.
- *
- * Usage: npm run seed:achievements
  */
 
-import { supabase } from '../config/supabase';
+import { supabaseAdmin } from '../config/supabase';
 import achievementDefinitions from '../data/achievement-definitions.json';
 import { CreateAchievementDTO } from '../types/achievement.types';
 
@@ -19,9 +16,6 @@ interface SeedResult {
   errors: string[];
 }
 
-/**
- * Seeds achievements into the database
- */
 async function seedAchievements(): Promise<SeedResult> {
   const result: SeedResult = {
     success: true,
@@ -35,21 +29,18 @@ async function seedAchievements(): Promise<SeedResult> {
 
   for (const achievement of achievementDefinitions) {
     try {
-      // Check if achievement with this key already exists
-      const { data: existing, error: fetchError } = await supabase
+      const { data: existing, error: fetchError } = await supabaseAdmin
         .from('achievements')
         .select('id, key')
         .eq('key', achievement.key)
         .single();
 
       if (fetchError && fetchError.code !== 'PGRST116') {
-        // PGRST116 = no rows returned
         throw fetchError;
       }
 
       if (existing) {
-        // Update existing achievement
-        const { error: updateError } = await supabase
+        const { error: updateError } = await supabaseAdmin
           .from('achievements')
           .update({
             name: achievement.name,
@@ -70,8 +61,7 @@ async function seedAchievements(): Promise<SeedResult> {
         console.log(`✏️  Updated: ${achievement.key} - ${achievement.name}`);
         result.updated++;
       } else {
-        // Insert new achievement
-        const { error: insertError } = await supabase
+        const { error: insertError } = await supabaseAdmin
           .from('achievements')
           .insert({
             key: achievement.key,
@@ -102,9 +92,6 @@ async function seedAchievements(): Promise<SeedResult> {
   return result;
 }
 
-/**
- * Main execution function
- */
 async function main() {
   try {
     const result = await seedAchievements();
@@ -130,7 +117,6 @@ async function main() {
   }
 }
 
-// Execute if run directly
 if (require.main === module) {
   main();
 }

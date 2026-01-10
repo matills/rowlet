@@ -1,8 +1,7 @@
 /**
  * Achievement Evaluation Engine
- * Sprint 11 - Motor de Logros
  *
- * This module contains the core logic for evaluating whether a user
+ * Contains the core logic for evaluating whether a user
  * meets the conditions for unlocking achievements.
  */
 
@@ -30,16 +29,10 @@ import {
   SpeedWatchingCondition,
 } from '../types/achievement.types';
 
-/**
- * Base interface for condition evaluators
- */
 interface IConditionEvaluator<T extends AchievementConditionData> {
   evaluate(userId: string, condition: T): Promise<AchievementEvaluationResult>;
 }
 
-/**
- * Evaluator for WATCHED_COUNT condition
- */
 class WatchedCountEvaluator implements IConditionEvaluator<WatchedCountCondition> {
   async evaluate(userId: string, condition: WatchedCountCondition): Promise<AchievementEvaluationResult> {
     const query = supabase
@@ -47,7 +40,6 @@ class WatchedCountEvaluator implements IConditionEvaluator<WatchedCountCondition
       .select('id', { count: 'exact', head: true })
       .eq('user_id', userId);
 
-    // Apply media type filter if specified
     if (condition.media_type) {
       const mediaQuery = supabase
         .from('media')
@@ -60,11 +52,9 @@ class WatchedCountEvaluator implements IConditionEvaluator<WatchedCountCondition
       }
     }
 
-    // Apply status filter if specified
     if (condition.status) {
       query.eq('status', condition.status);
     } else {
-      // Default to completed only
       query.eq('status', 'completed');
     }
 
@@ -82,9 +72,6 @@ class WatchedCountEvaluator implements IConditionEvaluator<WatchedCountCondition
   }
 }
 
-/**
- * Evaluator for WATCHED_COUNT_TIMEFRAME condition
- */
 class WatchedCountTimeframeEvaluator implements IConditionEvaluator<WatchedCountTimeframeCondition> {
   async evaluate(
     userId: string,
@@ -126,9 +113,6 @@ class WatchedCountTimeframeEvaluator implements IConditionEvaluator<WatchedCount
   }
 }
 
-/**
- * Evaluator for RATING_COUNT condition
- */
 class RatingCountEvaluator implements IConditionEvaluator<RatingCountCondition> {
   async evaluate(userId: string, condition: RatingCountCondition): Promise<AchievementEvaluationResult> {
     const query = supabase
@@ -163,9 +147,6 @@ class RatingCountEvaluator implements IConditionEvaluator<RatingCountCondition> 
   }
 }
 
-/**
- * Evaluator for RATING_VALUE condition
- */
 class RatingValueEvaluator implements IConditionEvaluator<RatingValueCondition> {
   async evaluate(userId: string, condition: RatingValueCondition): Promise<AchievementEvaluationResult> {
     const query = supabase
@@ -196,12 +177,8 @@ class RatingValueEvaluator implements IConditionEvaluator<RatingValueCondition> 
   }
 }
 
-/**
- * Evaluator for GENRE_DIVERSITY condition
- */
 class GenreDiversityEvaluator implements IConditionEvaluator<GenreDiversityCondition> {
   async evaluate(userId: string, condition: GenreDiversityCondition): Promise<AchievementEvaluationResult> {
-    // Get all media watched by user
     const { data: userMedia } = await supabase
       .from('user_media_list')
       .select('media_id')
@@ -219,13 +196,11 @@ class GenreDiversityEvaluator implements IConditionEvaluator<GenreDiversityCondi
       };
     }
 
-    // Get genres for all watched media
     const { data: media } = await supabase
       .from('media')
       .select('genres')
       .in('id', userMedia.map((m) => m.media_id));
 
-    // Collect unique genres
     const uniqueGenres = new Set<string>();
     media?.forEach((m) => {
       m.genres?.forEach((genre: string) => uniqueGenres.add(genre));
@@ -244,14 +219,8 @@ class GenreDiversityEvaluator implements IConditionEvaluator<GenreDiversityCondi
   }
 }
 
-/**
- * Evaluator for STREAK condition
- * Note: This is a simplified implementation. A production version would need
- * more sophisticated logic to track consecutive periods.
- */
 class StreakEvaluator implements IConditionEvaluator<StreakCondition> {
   async evaluate(userId: string, condition: StreakCondition): Promise<AchievementEvaluationResult> {
-    // Get all completed media sorted by completion date
     const { data: completions } = await supabase
       .from('user_media_list')
       .select('completed_at')
@@ -271,7 +240,6 @@ class StreakEvaluator implements IConditionEvaluator<StreakCondition> {
       };
     }
 
-    // Calculate streak based on period
     let currentStreak = 1;
     let previousDate = new Date(completions[0].completed_at);
 
@@ -285,10 +253,9 @@ class StreakEvaluator implements IConditionEvaluator<StreakCondition> {
       } else if (condition.period === 'week') {
         periodMs = 7 * 24 * 60 * 60 * 1000; // 7 days
       } else if (condition.period === 'month') {
-        periodMs = 30 * 24 * 60 * 60 * 1000; // 30 days (approximate)
+        periodMs = 30 * 24 * 60 * 60 * 1000;
       }
 
-      // Check if within consecutive periods (allow 2x period for flexibility)
       if (timeDiff <= periodMs * 2) {
         currentStreak++;
       } else {
@@ -309,9 +276,6 @@ class StreakEvaluator implements IConditionEvaluator<StreakCondition> {
   }
 }
 
-/**
- * Evaluator for SOCIAL condition
- */
 class SocialEvaluator implements IConditionEvaluator<SocialCondition> {
   async evaluate(userId: string, condition: SocialCondition): Promise<AchievementEvaluationResult> {
     let count = 0;
@@ -363,9 +327,6 @@ class SocialEvaluator implements IConditionEvaluator<SocialCondition> {
   }
 }
 
-/**
- * Evaluator for LIST_CREATION condition
- */
 class ListCreationEvaluator implements IConditionEvaluator<ListCreationCondition> {
   async evaluate(userId: string, condition: ListCreationCondition): Promise<AchievementEvaluationResult> {
     const { count } = await supabase
@@ -386,9 +347,6 @@ class ListCreationEvaluator implements IConditionEvaluator<ListCreationCondition
   }
 }
 
-/**
- * Evaluator for COLLABORATION condition
- */
 class CollaborationEvaluator implements IConditionEvaluator<CollaborationCondition> {
   async evaluate(userId: string, condition: CollaborationCondition): Promise<AchievementEvaluationResult> {
     const query = supabase
@@ -414,10 +372,6 @@ class CollaborationEvaluator implements IConditionEvaluator<CollaborationConditi
   }
 }
 
-/**
- * Evaluator for TIME_OF_DAY condition
- * Note: This requires tracking completion timestamps with hour precision
- */
 class TimeOfDayEvaluator implements IConditionEvaluator<TimeOfDayCondition> {
   async evaluate(userId: string, condition: TimeOfDayCondition): Promise<AchievementEvaluationResult> {
     // Get all completions with timestamps
@@ -465,12 +419,8 @@ class TimeOfDayEvaluator implements IConditionEvaluator<TimeOfDayCondition> {
   }
 }
 
-/**
- * Evaluator for COMPLETION condition
- */
 class CompletionEvaluator implements IConditionEvaluator<CompletionCondition> {
   async evaluate(userId: string, condition: CompletionCondition): Promise<AchievementEvaluationResult> {
-    // Get completed media of specified type
     const { data: completedMedia } = await supabase
       .from('user_media_list')
       .select('media_id')
@@ -513,12 +463,8 @@ class CompletionEvaluator implements IConditionEvaluator<CompletionCondition> {
   }
 }
 
-/**
- * Evaluator for YEAR_FILTER condition
- */
 class YearFilterEvaluator implements IConditionEvaluator<YearFilterCondition> {
   async evaluate(userId: string, condition: YearFilterCondition): Promise<AchievementEvaluationResult> {
-    // Get completed media
     const { data: completedMedia } = await supabase
       .from('user_media_list')
       .select('media_id')
@@ -566,47 +512,94 @@ class YearFilterEvaluator implements IConditionEvaluator<YearFilterCondition> {
   }
 }
 
-/**
- * Evaluator for LANGUAGE_DIVERSITY condition
- * Note: Requires language data in media table
- */
 class LanguageDiversityEvaluator implements IConditionEvaluator<LanguageDiversityCondition> {
   async evaluate(userId: string, condition: LanguageDiversityCondition): Promise<AchievementEvaluationResult> {
-    // This would require a language field in the media table
-    // For now, return a placeholder implementation
+    const { data: userMedia } = await supabase
+      .from('user_media_list')
+      .select('media_id')
+      .eq('user_id', userId)
+      .eq('status', 'completed');
+
+    if (!userMedia || userMedia.length === 0) {
+      return {
+        achievement_id: '',
+        achievement_key: '',
+        should_unlock: false,
+        current_progress: 0,
+        required_progress: condition.required_language_count,
+        progress_percentage: 0,
+      };
+    }
+
+    const { data: media } = await supabase
+      .from('media')
+      .select('original_language')
+      .in('id', userMedia.map((m) => m.media_id))
+      .not('original_language', 'is', null);
+
+    const uniqueLanguages = new Set<string>();
+    media?.forEach((m) => {
+      if (m.original_language) {
+        uniqueLanguages.add(m.original_language);
+      }
+    });
+
+    const currentProgress = uniqueLanguages.size;
+
     return {
       achievement_id: '',
       achievement_key: '',
-      should_unlock: false,
-      current_progress: 0,
+      should_unlock: currentProgress >= condition.required_language_count,
+      current_progress: currentProgress,
       required_progress: condition.required_language_count,
-      progress_percentage: 0,
+      progress_percentage: Math.round((currentProgress / condition.required_language_count) * 100),
     };
   }
 }
 
-/**
- * Evaluator for COUNTRY_DIVERSITY condition
- * Note: Requires country data in media table
- */
 class CountryDiversityEvaluator implements IConditionEvaluator<CountryDiversityCondition> {
   async evaluate(userId: string, condition: CountryDiversityCondition): Promise<AchievementEvaluationResult> {
-    // This would require a country field in the media table
-    // For now, return a placeholder implementation
+    const { data: userMedia } = await supabase
+      .from('user_media_list')
+      .select('media_id')
+      .eq('user_id', userId)
+      .eq('status', 'completed');
+
+    if (!userMedia || userMedia.length === 0) {
+      return {
+        achievement_id: '',
+        achievement_key: '',
+        should_unlock: false,
+        current_progress: 0,
+        required_progress: condition.required_country_count,
+        progress_percentage: 0,
+      };
+    }
+
+    const { data: media } = await supabase
+      .from('media')
+      .select('origin_country')
+      .in('id', userMedia.map((m) => m.media_id))
+      .not('origin_country', 'is', null);
+
+    const uniqueCountries = new Set<string>();
+    media?.forEach((m) => {
+      m.origin_country?.forEach((country: string) => uniqueCountries.add(country));
+    });
+
+    const currentProgress = uniqueCountries.size;
+
     return {
       achievement_id: '',
       achievement_key: '',
-      should_unlock: false,
-      current_progress: 0,
+      should_unlock: currentProgress >= condition.required_country_count,
+      current_progress: currentProgress,
       required_progress: condition.required_country_count,
-      progress_percentage: 0,
+      progress_percentage: Math.round((currentProgress / condition.required_country_count) * 100),
     };
   }
 }
 
-/**
- * Evaluator for PERFECT_SCORE condition
- */
 class PerfectScoreEvaluator implements IConditionEvaluator<PerfectScoreCondition> {
   async evaluate(userId: string, condition: PerfectScoreCondition): Promise<AchievementEvaluationResult> {
     const { count } = await supabase
@@ -628,12 +621,8 @@ class PerfectScoreEvaluator implements IConditionEvaluator<PerfectScoreCondition
   }
 }
 
-/**
- * Evaluator for SPEED_WATCHING condition
- */
 class SpeedWatchingEvaluator implements IConditionEvaluator<SpeedWatchingCondition> {
   async evaluate(userId: string, condition: SpeedWatchingCondition): Promise<AchievementEvaluationResult> {
-    // Get completed series/anime
     const { data: completedMedia } = await supabase
       .from('user_media_list')
       .select('media_id, started_at, completed_at')
@@ -653,7 +642,6 @@ class SpeedWatchingEvaluator implements IConditionEvaluator<SpeedWatchingConditi
       };
     }
 
-    // Check each completion for speed watching
     let foundSpeedWatch = false;
 
     for (const entry of completedMedia) {
@@ -689,9 +677,6 @@ class SpeedWatchingEvaluator implements IConditionEvaluator<SpeedWatchingConditi
   }
 }
 
-/**
- * Achievement Engine - Main class for evaluating achievements
- */
 export class AchievementEngine {
   private evaluators: Map<AchievementConditionType, IConditionEvaluator<any>>;
 
@@ -700,9 +685,6 @@ export class AchievementEngine {
     this.registerEvaluators();
   }
 
-  /**
-   * Register all condition evaluators
-   */
   private registerEvaluators(): void {
     this.evaluators.set(AchievementConditionType.WATCHED_COUNT, new WatchedCountEvaluator());
     this.evaluators.set(AchievementConditionType.WATCHED_COUNT_TIMEFRAME, new WatchedCountTimeframeEvaluator());
@@ -722,9 +704,6 @@ export class AchievementEngine {
     this.evaluators.set(AchievementConditionType.SPEED_WATCHING, new SpeedWatchingEvaluator());
   }
 
-  /**
-   * Evaluate a single achievement for a user
-   */
   async evaluateAchievement(userId: string, achievement: Achievement): Promise<AchievementEvaluationResult> {
     const evaluator = this.evaluators.get(achievement.condition_type);
 
@@ -734,18 +713,13 @@ export class AchievementEngine {
 
     const result = await evaluator.evaluate(userId, achievement.condition_data);
 
-    // Populate achievement info
     result.achievement_id = achievement.id;
     result.achievement_key = achievement.key;
 
     return result;
   }
 
-  /**
-   * Evaluate all achievements for a user
-   */
   async evaluateAllAchievements(userId: string): Promise<AchievementEvaluationResult[]> {
-    // Get all active achievements
     const { data: achievements, error } = await supabase
       .from('achievements')
       .select('*')
@@ -759,7 +733,6 @@ export class AchievementEngine {
       return [];
     }
 
-    // Evaluate each achievement
     const results: AchievementEvaluationResult[] = [];
 
     for (const achievement of achievements) {
@@ -774,15 +747,10 @@ export class AchievementEngine {
     return results;
   }
 
-  /**
-   * Evaluate achievements that might be triggered by a specific event
-   * This is used by event listeners to only check relevant achievements
-   */
   async evaluateByConditionType(
     userId: string,
     conditionTypes: AchievementConditionType[]
   ): Promise<AchievementEvaluationResult[]> {
-    // Get achievements matching the condition types
     const { data: achievements, error } = await supabase
       .from('achievements')
       .select('*')
@@ -797,7 +765,6 @@ export class AchievementEngine {
       return [];
     }
 
-    // Evaluate each achievement
     const results: AchievementEvaluationResult[] = [];
 
     for (const achievement of achievements) {
@@ -813,5 +780,4 @@ export class AchievementEngine {
   }
 }
 
-// Export singleton instance
 export const achievementEngine = new AchievementEngine();

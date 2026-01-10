@@ -208,7 +208,6 @@ export class MediaController {
     try {
       const { id, seasonNumber } = req.params;
 
-      // First, get the season by media_id and season_number
       const seasons = await mediaService.getSeasons(id);
       const season = seasons.find(
         (s: any) => s.season_number === parseInt(seasonNumber)

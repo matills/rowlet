@@ -505,5 +505,4 @@ export class AchievementService {
   }
 }
 
-// Export singleton instance
 export const achievementService = new AchievementService();
