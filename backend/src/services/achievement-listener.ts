@@ -1,11 +1,3 @@
-/**
- * Achievement Event Listeners
- * Sprint 11 - Motor de Logros
- *
- * This module listens to application events and automatically evaluates
- * and unlocks achievements when users perform relevant actions.
- */
-
 import { EventEmitter } from 'events';
 import { achievementService } from './achievement.service';
 import { AchievementConditionType } from '../types/achievement.types';

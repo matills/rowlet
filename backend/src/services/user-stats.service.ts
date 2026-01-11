@@ -8,10 +8,6 @@ import type {
   MonthlyActivity,
 } from '../types/stats.types';
 
-/**
- * UserStatsService
- * Sprint 6: Advanced user statistics
- */
 export class UserStatsService {
   /**
    * Get comprehensive user statistics

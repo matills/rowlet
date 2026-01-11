@@ -1,10 +1,3 @@
-/**
- * Achievement Controller
- * Sprint 11 - Motor de Logros
- *
- * Handles HTTP requests for achievements, user achievements, and XP/leveling
- */
-
 import { Response } from 'express';
 import { achievementService } from '../services/achievement.service';
 import { logger } from '../config/logger';

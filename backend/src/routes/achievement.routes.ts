@@ -1,10 +1,3 @@
-/**
- * Achievement Routes
- * Sprint 11 - Motor de Logros
- *
- * Defines API endpoints for achievements, user achievements, and XP/leveling
- */
-
 import { Router } from 'express';
 import { achievementController } from '../controllers/achievement.controller';
 import { authenticate, optionalAuth } from '../middlewares/auth';
@@ -20,7 +13,6 @@ const router = Router();
  * @query limit: Results per page
  * @query offset: Pagination offset
  * @access Public
- * Sprint 11: Achievement listing
  */
 router.get('/', (req, res) => achievementController.getAllAchievements(req, res));
 
@@ -28,7 +20,6 @@ router.get('/', (req, res) => achievementController.getAllAchievements(req, res)
  * @route GET /api/achievements/stats
  * @desc Get achievement statistics (unlock counts, percentages)
  * @access Public
- * Sprint 11: Achievement stats and rarity tracking
  */
 router.get('/stats', (req, res) => achievementController.getAchievementStats(req, res));
 
@@ -37,7 +28,6 @@ router.get('/stats', (req, res) => achievementController.getAchievementStats(req
  * @desc Get achievement leaderboard (users with most achievements)
  * @query limit: Number of users to return, default: 10
  * @access Public
- * Sprint 11: Leaderboard for achievements
  */
 router.get('/leaderboard', (req, res) => achievementController.getAchievementLeaderboard(req, res));
 
@@ -45,7 +35,6 @@ router.get('/leaderboard', (req, res) => achievementController.getAchievementLea
  * @route GET /api/achievements/:id
  * @desc Get a single achievement by ID
  * @access Public
- * Sprint 11: Individual achievement details
  */
 router.get('/:id', (req, res) => achievementController.getAchievementById(req, res));
 

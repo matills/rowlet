@@ -230,7 +230,6 @@ export class UserController {
   /**
    * Search users by username or display name
    * GET /api/users/search?q=query&page=1&limit=20
-   * Sprint 7: User search functionality
    */
   async searchUsers(req: AuthRequest, res: Response): Promise<void> {
     try {
@@ -264,7 +263,6 @@ export class UserController {
   /**
    * Get current user general statistics
    * GET /api/users/me/stats
-   * Sprint 6: Comprehensive user statistics
    */
   async getMyStatsGeneral(req: AuthRequest, res: Response): Promise<void> {
     try {
@@ -293,7 +291,6 @@ export class UserController {
   /**
    * Get current user genre statistics
    * GET /api/users/me/stats/genres
-   * Sprint 6: Genre distribution statistics
    */
   async getMyStatsGenres(req: AuthRequest, res: Response): Promise<void> {
     try {
@@ -322,7 +319,6 @@ export class UserController {
   /**
    * Get current user timeline statistics
    * GET /api/users/me/stats/timeline
-   * Sprint 6: Activity timeline and streaks
    */
   async getMyStatsTimeline(req: AuthRequest, res: Response): Promise<void> {
     try {

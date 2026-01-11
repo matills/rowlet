@@ -1,8 +1,3 @@
-/**
- * User Statistics Types
- * Types for Sprint 6: User Basic Statistics
- */
-
 export interface UserStats {
   // Basic counts by status
   watching: number;

@@ -53,7 +53,6 @@ router.delete('/me', authenticate, (req, res) =>
  * @route GET /api/users/me/stats
  * @desc Get current user general statistics
  * @access Private
- * Sprint 6: Comprehensive statistics
  */
 router.get('/me/stats', authenticate, (req, res) =>
   userController.getMyStatsGeneral(req, res)
@@ -63,7 +62,6 @@ router.get('/me/stats', authenticate, (req, res) =>
  * @route GET /api/users/me/stats/genres
  * @desc Get current user genre statistics
  * @access Private
- * Sprint 6: Genre distribution
  */
 router.get('/me/stats/genres', authenticate, (req, res) =>
   userController.getMyStatsGenres(req, res)
@@ -73,7 +71,6 @@ router.get('/me/stats/genres', authenticate, (req, res) =>
  * @route GET /api/users/me/stats/timeline
  * @desc Get current user timeline statistics
  * @access Private
- * Sprint 6: Activity timeline and streaks
  */
 router.get('/me/stats/timeline', authenticate, (req, res) =>
   userController.getMyStatsTimeline(req, res)
@@ -83,7 +80,6 @@ router.get('/me/stats/timeline', authenticate, (req, res) =>
  * @route GET /api/users/me/achievements
  * @desc Get current user achievements
  * @access Private
- * Sprint 11: User achievements
  */
 router.get('/me/achievements', authenticate, (req, res) =>
   achievementController.getMyAchievements(req, res)
@@ -93,7 +89,6 @@ router.get('/me/achievements', authenticate, (req, res) =>
  * @route GET /api/users/me/achievements/progress
  * @desc Get current user achievement progress summary
  * @access Private
- * Sprint 11: Achievement progress
  */
 router.get('/me/achievements/progress', authenticate, (req, res) =>
   achievementController.getMyAchievementProgress(req, res)
@@ -103,7 +98,6 @@ router.get('/me/achievements/progress', authenticate, (req, res) =>
  * @route GET /api/users/me/xp
  * @desc Get current user XP and level
  * @access Private
- * Sprint 11: User XP and leveling
  */
 router.get('/me/xp', authenticate, (req, res) =>
   achievementController.getMyXP(req, res)
@@ -113,7 +107,6 @@ router.get('/me/xp', authenticate, (req, res) =>
  * @route POST /api/users/me/achievements/evaluate
  * @desc Manually trigger achievement evaluation (testing/debug)
  * @access Private
- * Sprint 11: Manual achievement evaluation
  */
 router.post('/me/achievements/evaluate', authenticate, (req, res) =>
   achievementController.evaluateMyAchievements(req, res)
@@ -124,7 +117,6 @@ router.post('/me/achievements/evaluate', authenticate, (req, res) =>
  * @desc Search users by username or display name
  * @query q: search query
  * @access Public
- * Sprint 7: User search functionality
  */
 router.get('/search', (req, res) => userController.searchUsers(req, res));
 
@@ -150,7 +142,6 @@ router.get('/:username/stats', optionalAuth, (req, res) =>
  * @route GET /api/users/:username/lists
  * @desc Get user's public custom lists
  * @access Public
- * Sprint 7: Public profile lists
  */
 router.get('/:username/lists', (req, res) =>
   customListController.getPublicListsByUsername(req, res)
@@ -160,7 +151,6 @@ router.get('/:username/lists', (req, res) =>
  * @route POST /api/users/:username/follow
  * @desc Follow a user
  * @access Private
- * Sprint 8: Follow system
  */
 router.post('/:username/follow', authenticate, (req, res) =>
   followController.followUser(req, res)
@@ -170,7 +160,6 @@ router.post('/:username/follow', authenticate, (req, res) =>
  * @route DELETE /api/users/:username/unfollow
  * @desc Unfollow a user
  * @access Private
- * Sprint 8: Follow system
  */
 router.delete('/:username/unfollow', authenticate, (req, res) =>
   followController.unfollowUser(req, res)
@@ -180,7 +169,6 @@ router.delete('/:username/unfollow', authenticate, (req, res) =>
  * @route GET /api/users/:username/followers
  * @desc Get user's followers list
  * @access Public
- * Sprint 8: Follow system
  */
 router.get('/:username/followers', (req, res) =>
   followController.getFollowers(req, res)
@@ -190,7 +178,6 @@ router.get('/:username/followers', (req, res) =>
  * @route GET /api/users/:username/following
  * @desc Get list of users that this user is following
  * @access Public
- * Sprint 8: Follow system
  */
 router.get('/:username/following', (req, res) =>
   followController.getFollowing(req, res)
@@ -200,7 +187,6 @@ router.get('/:username/following', (req, res) =>
  * @route GET /api/users/:username/is-following
  * @desc Check if current user is following target user
  * @access Private
- * Sprint 8: Follow system
  */
 router.get('/:username/is-following', authenticate, (req, res) =>
   followController.checkFollowStatus(req, res)
@@ -210,7 +196,6 @@ router.get('/:username/is-following', authenticate, (req, res) =>
  * @route GET /api/users/:username/achievements
  * @desc Get public achievements for a user
  * @access Public
- * Sprint 11: Public user achievements
  */
 router.get('/:username/achievements', (req, res) =>
   achievementController.getUserAchievements(req, res)

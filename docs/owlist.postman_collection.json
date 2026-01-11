@@ -1403,6 +1403,603 @@
 				}
 			]
 		},
+		{
+			"name": "Collaborative Lists (Sprint 9)",
+			"item": [
+				{
+					"name": "Get List Collaborators",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/collaborators",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"collaborators"
+							]
+						}
+					}
+				},
+				{
+					"name": "Add Collaborator",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"user-uuid-here\",\n  \"role\": \"editor\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/collaborators",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"collaborators"
+							]
+						}
+					}
+				},
+				{
+					"name": "Remove Collaborator",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/collaborators/:userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"collaborators",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "user-uuid-here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Collaborator Role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"role\": \"viewer\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/collaborators/:userId/role",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"collaborators",
+								":userId",
+								"role"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "user-uuid-here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Invite Collaborator",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"invitedUsername\": \"testuser\",\n  \"role\": \"editor\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/invite",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"invite"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get My Invitations",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/invitations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invitations"
+							]
+						}
+					}
+				},
+				{
+					"name": "Respond to Invitation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accept\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/invitations/:invitationId/respond",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invitations",
+								":invitationId",
+								"respond"
+							],
+							"variable": [
+								{
+									"key": "invitationId",
+									"value": "invitation-uuid-here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Cancel Invitation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/invitations/:invitationId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invitations",
+								":invitationId"
+							],
+							"variable": [
+								{
+									"key": "invitationId",
+									"value": "invitation-uuid-here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Generate Share Code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lists/{{list_id}}/share",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"{{list_id}}",
+								"share"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get List By Share Code",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lists/shared/:shareCode",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lists",
+								"shared",
+								":shareCode"
+							],
+							"variable": [
+								{
+									"key": "shareCode",
+									"value": "ABC123"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Activity Feed (Sprint 10)",
+			"item": [
+				{
+					"name": "Get My Feed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/feed?limit=20&offset=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"feed"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "types",
+									"value": "media_added,media_completed",
+									"disabled": true
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get My Activity",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/me/activity?limit=20&offset=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"me",
+								"activity"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get User Activity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/:username/activity?limit=20&offset=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								":username",
+								"activity"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							],
+							"variable": [
+								{
+									"key": "username",
+									"value": "testuser"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Activity",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/activity/:activityId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"activity",
+								":activityId"
+							],
+							"variable": [
+								{
+									"key": "activityId",
+									"value": "activity-uuid-here"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Achievements (Sprint 11-12-13)",
+			"item": [
+				{
+					"name": "Get All Achievements",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/achievements?limit=50&offset=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "rarity",
+									"value": "rare",
+									"disabled": true
+								},
+								{
+									"key": "is_hidden",
+									"value": "false",
+									"disabled": true
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Achievement Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/achievements/stats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								"stats"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Achievement Leaderboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/achievements/leaderboard?limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								"leaderboard"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Achievement By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/achievements/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"achievements",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "achievement-uuid-here"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
 			"name": "Media (Database)",
 			"item": [
 				{
@@ -1519,6 +2116,241 @@
 								"seasons",
 								"1",
 								"episodes"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Notifications (Sprint 14)",
+			"item": [
+				{
+					"name": "Get Notifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notifications?limit=20&offset=0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "is_read",
+									"value": "false",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "achievement_unlocked",
+									"disabled": true
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Unread Count",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notifications/unread-count",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"unread-count"
+							]
+						}
+					}
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notifications/:id/read",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								":id",
+								"read"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "notification-uuid-here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Mark All as Read",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notifications/read-all",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"read-all"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Notification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notifications/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "notification-uuid-here"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Notification Preferences",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notifications/preferences",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"preferences"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Notification Preferences",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"achievement_unlocked\": true,\n  \"level_up\": true,\n  \"new_follower\": true,\n  \"list_invitation\": true,\n  \"user_activity\": false,\n  \"email_enabled\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notifications/preferences",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"preferences"
 							]
 						}
 					}

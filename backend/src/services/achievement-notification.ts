@@ -1,11 +1,6 @@
-/**
- * Achievement Notification Service
- *
- * Handles notifications for achievement unlocks and level ups.
- */
-
 import logger from '../config/logger';
 import { Achievement, LevelUpResult } from '../types/achievement.types';
+import { notificationService } from './notification.service';
 
 export interface AchievementNotificationPayload {
   userId: string;
@@ -28,6 +23,14 @@ class AchievementNotificationService {
         `[Notification] Achievement unlocked for user ${payload.userId}: ${payload.achievement.name} (+${payload.xpAwarded} XP)`
       );
 
+      await notificationService.notifyAchievementUnlock(payload.userId, {
+        achievement_id: payload.achievement.id,
+        achievement_key: payload.achievement.key,
+        achievement_name: payload.achievement.name,
+        rarity: payload.achievement.rarity,
+        xp_awarded: payload.xpAwarded,
+      });
+
       if (payload.levelUpInfo?.leveled_up) {
         await this.notifyLevelUp({
           userId: payload.userId,
@@ -46,6 +49,12 @@ class AchievementNotificationService {
       logger.info(
         `[Notification] Level up for user ${payload.userId}: Level ${payload.oldLevel} → ${payload.newLevel}`
       );
+
+      await notificationService.notifyLevelUp(payload.userId, {
+        old_level: payload.oldLevel,
+        new_level: payload.newLevel,
+        total_xp: payload.totalXP,
+      });
     } catch (error: any) {
       logger.error('[Notification] Error sending level up notification:', error);
     }

@@ -8,6 +8,7 @@ import activityRoutes from './activity.routes';
 import mediaRoutes from './media.routes';
 import externalRoutes from './external.routes';
 import achievementRoutes from './achievement.routes';
+import notificationRoutes from './notification.routes';
 import { customListController } from '../controllers/custom-list.controller';
 
 const router = Router();
@@ -26,6 +27,7 @@ router.use('/', activityRoutes);
 router.use('/media', mediaRoutes);
 router.use('/external', externalRoutes);
 router.use('/achievements', achievementRoutes);
+router.use('/notifications', notificationRoutes);
 
 router.get('/health', (req, res) => {
   res.status(200).json({

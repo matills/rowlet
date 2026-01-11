@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '../config/supabase';
 import { logger } from '../config/logger';
 import { activityService } from './activity.service';
+import { notificationService } from './notification.service';
 import type { FollowUser, FollowCounts, FollowStatus, PaginatedFollows } from '../types/follow.types';
 
 export class FollowService {
@@ -47,6 +48,16 @@ export class FollowService {
       }
 
       await activityService.trackUserFollowed(followerId, targetUser.id);
+
+      const { data: followerData } = await supabaseAdmin
+        .from('users')
+        .select('username')
+        .eq('id', followerId)
+        .single();
+
+      if (followerData) {
+        await notificationService.notifyNewFollower(targetUser.id, followerId, followerData.username);
+      }
     } catch (error) {
       logger.error('Follow user error:', error);
       throw error;

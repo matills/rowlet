@@ -6,9 +6,7 @@ import type {
 } from '../validators/auth.validators';
 
 export class UserService {
-  /**
-   * Get user profile by ID
-   */
+
   async getUserProfile(userId: string) {
     try {
       const { data, error } = await supabaseAdmin
@@ -29,9 +27,7 @@ export class UserService {
     }
   }
 
-  /**
-   * Get user profile by username
-   */
+
   async getUserByUsername(username: string) {
     try {
       const { data, error } = await supabaseAdmin
@@ -52,9 +48,7 @@ export class UserService {
     }
   }
 
-  /**
-   * Update user profile
-   */
+
   async updateProfile(userId: string, data: UpdateProfileInput) {
     try {
       const updateData: any = {};
@@ -88,9 +82,7 @@ export class UserService {
     }
   }
 
-  /**
-   * Change user password
-   */
+
   async changePassword(userId: string, data: ChangePasswordInput) {
     try {
       // Supabase doesn't provide a direct way to verify current password
@@ -114,9 +106,7 @@ export class UserService {
     }
   }
 
-  /**
-   * Delete user account
-   */
+
   async deleteAccount(userId: string) {
     try {
       // Delete from auth.users (cascade will delete from public.users)
@@ -134,9 +124,7 @@ export class UserService {
     }
   }
 
-  /**
-   * Get user statistics
-   */
+
   async getUserStats(userId: string) {
     try {
       // Count media by status
@@ -170,10 +158,7 @@ export class UserService {
     }
   }
 
-  /**
-   * Search users by username or display name
-   * Sprint 7: User search functionality
-   */
+
   async searchUsers(query: string, page = 1, limit = 20) {
     try {
       const offset = (page - 1) * limit;

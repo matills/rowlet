@@ -1,7 +1,3 @@
-/**
- * Sprint 8: Follow System Types
- */
-
 export interface Follow {
   id: string;
   follower_id: string;

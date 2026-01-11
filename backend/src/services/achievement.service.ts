@@ -1,10 +1,3 @@
-/**
- * Achievement Service
- * Sprint 11 - Motor de Logros
- *
- * Main service for managing achievements, user achievements, and XP/leveling
- */
-
 import { supabase } from '../config/supabase';
 import { achievementEngine } from './achievement-engine';
 import { notifyAchievementUnlock } from './achievement-notification';
