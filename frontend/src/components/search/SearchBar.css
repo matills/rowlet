@@ -1,0 +1,32 @@
+.search-bar {
+  width: 100%;
+}
+
+.search-bar__input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-bar__input {
+  width: 100%;
+  padding-right: 3rem;
+}
+
+.search-bar__clear {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--color-muted-foreground);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.search-bar__clear:hover {
+  color: var(--color-foreground);
+}

@@ -95,6 +95,10 @@
     padding: var(--space-4) var(--space-8);
 }
 
+.btn--full-width {
+    width: 100%;
+}
+
 /* ========== CARDS ========== */
 .card {
     background-color: var(--color-card);

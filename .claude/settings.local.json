@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(supabase status:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(git -C \"C:\\\\Users\\\\maty_\\\\workspace\\\\rowlet\" status --short)",
+      "Bash(pnpm --version:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(where pnpm:*)",
+      "Bash(C:/Users/maty_/AppData/Local/pnpm/.tools/pnpm-exe/10.28.1/pnpm --version)",
+      "Bash(node dev.js:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(pnpm lint:*)"
+    ]
+  }
+}

@@ -1,7 +1,11 @@
+import { useNavigate } from 'react-router-dom';
+import { Film, Star, Trophy, Users } from 'lucide-react';
 import { Button } from '../components/ui';
 import './Landing.css';
 
 export function Landing() {
+    const navigate = useNavigate();
+
     return (
         <div className="landing">
             {/* NAVBAR */}
@@ -12,10 +16,10 @@ export function Landing() {
                         <span className="navbar__title">OWLIST</span>
                     </div>
                     <div className="navbar__actions">
-                        <Button variant="secondary" className="navbar__login">
+                        <Button variant="secondary" className="navbar__login" onClick={() => navigate('/login')}>
                             INGRESAR
                         </Button>
-                        <Button variant="primary" className="btn-retro">
+                        <Button variant="primary" className="btn-retro" onClick={() => navigate('/login')}>
                             REGÍSTRATE
                         </Button>
                     </div>
@@ -35,10 +39,10 @@ export function Landing() {
                                 La forma más clásica de llevar el control de tus películas, series y anime. ¡Al estilo de los viejos tiempos!
                             </p>
                             <div className="hero__actions">
-                                <Button variant="primary" size="lg" className="btn-retro hero__cta">
+                                <Button variant="primary" size="lg" className="btn-retro hero__cta" onClick={() => navigate('/login')}>
                                     ¡Empieza Ahora!
                                 </Button>
-                                <Button variant="secondary" size="lg" className="hero__demo">
+                                <Button variant="secondary" size="lg" className="hero__demo" onClick={() => navigate('/login')}>
                                     Ver Demo
                                 </Button>
                             </div>
@@ -68,22 +72,22 @@ export function Landing() {
 
                     <div className="features__grid">
                         <FeatureCard
-                            icon="🎬"
+                            icon={<Film size={48} strokeWidth={2.5} />}
                             title="Tracking Total"
                             description="Películas, Series, Anime. Todo en un solo lugar con estilo clásico."
                         />
                         <FeatureCard
-                            icon="⭐"
+                            icon={<Star size={48} strokeWidth={2.5} />}
                             title="Listas Únicas"
                             description="Crea listas compartidas con amigos. ¡La unión hace la fuerza!"
                         />
                         <FeatureCard
-                            icon="🏆"
+                            icon={<Trophy size={48} strokeWidth={2.5} />}
                             title="Logros"
                             description="Desbloquea medallas retro mientras completas tu catálogo."
                         />
                         <FeatureCard
-                            icon="👥"
+                            icon={<Users size={48} strokeWidth={2.5} />}
                             title="Social"
                             description="Sigue a otros búhos cinéfilos y comparte tus opiniones."
                         />
@@ -108,7 +112,7 @@ export function Landing() {
 }
 
 interface FeatureCardProps {
-    icon: string;
+    icon: React.ReactNode;
     title: string;
     description: string;
 }

@@ -28,28 +28,28 @@ export const Default: Story = {
 export const Bronze: Story = {
     args: {
         tier: 'bronze',
-        children: '🏆 Bronce',
+        children: 'Bronce',
     },
 };
 
 export const Silver: Story = {
     args: {
         tier: 'silver',
-        children: '🥈 Plata',
+        children: 'Plata',
     },
 };
 
 export const Gold: Story = {
     args: {
         tier: 'gold',
-        children: '🥇 Oro',
+        children: 'Oro',
     },
 };
 
 export const Platinum: Story = {
     args: {
         tier: 'platinum',
-        children: '💎 Platino',
+        children: 'Platino',
     },
 };
 
@@ -57,10 +57,10 @@ export const AllTiers: Story = {
     render: () => (
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <Badge>Default</Badge>
-            <Badge tier="bronze">🏆 Bronce</Badge>
-            <Badge tier="silver">🥈 Plata</Badge>
-            <Badge tier="gold">🥇 Oro</Badge>
-            <Badge tier="platinum">💎 Platino</Badge>
+            <Badge tier="bronze">Bronce</Badge>
+            <Badge tier="silver">Plata</Badge>
+            <Badge tier="gold">Oro</Badge>
+            <Badge tier="platinum">Platino</Badge>
         </div>
     ),
 };

@@ -150,7 +150,7 @@ pnpm dev:backend  # Backend only
 # frontend/.env.local
 VITE_SUPABASE_URL=http://localhost:54321
 VITE_SUPABASE_ANON_KEY=your-anon-key
-VITE_API_URL=http://localhost:3001
+VITE_API_URL=http://localhost:3000
 
 # backend/.env
 SUPABASE_URL=http://localhost:54321

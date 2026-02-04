@@ -1,16 +1,16 @@
-# Owlist - Trackea tu diversión 🦉
+# Owlist - Trackea tu diversión
 
 Una aplicación web de tracking de entretenimiento (películas, series y anime) con una identidad visual distintiva inspirada en los cartoons de los años 30.
 
-## ✨ Features Principales
+## Features Principales
 
-- 🎬 **Tracking unificado** de películas, series y anime
-- 🏆 **Sistema de logros gamificado** con medallas estilo retro
-- 📝 **Listas colaborativas** en tiempo real
-- 👥 **Perfiles públicos** con sistema de seguimiento
-- 📊 **Reviews** con spoiler tags, likes y replies
+- **Tracking unificado** de películas, series y anime
+- **Sistema de logros gamificado** con medallas estilo retro
+- **Listas colaborativas** en tiempo real
+- **Perfiles públicos** con sistema de seguimiento
+- **Reviews** con spoiler tags, likes y replies
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Capa | Tecnología |
 |------|------------|
@@ -20,7 +20,7 @@ Una aplicación web de tracking de entretenimiento (películas, series y anime) 
 | State | Zustand (client) + TanStack Query (server) |
 | APIs | TMDB (películas/series) + AniList (anime) |
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 owlist/
@@ -31,7 +31,7 @@ owlist/
 └── docs/         # Documentación
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerrequisitos
 
@@ -62,12 +62,12 @@ pnpm dev
 ```bash
 pnpm dev              # Inicia frontend y backend
 pnpm dev:frontend     # Solo frontend (puerto 5173)
-pnpm dev:backend      # Solo backend (puerto 3001)
+pnpm dev:backend      # Solo backend (puerto 3000)
 pnpm storybook        # Inicia Storybook
 pnpm healthcheck      # Lint + TypeCheck
 ```
 
-## 🎨 Design System
+## Design System
 
 El diseño está inspirado en la estética de cartoons de los años 30 (Cuphead, Fleischer Studios):
 
@@ -77,7 +77,7 @@ El diseño está inspirado en la estética de cartoons de los años 30 (Cuphead,
 
 Ver [Storybook](http://localhost:6006) para documentación de componentes.
 
-## 📖 Documentación
+## Documentación
 
 - [Roadmap](docs/roadmap.md) - Fases de desarrollo
 - [AGENTS.md](.claude/agents/AGENTS.md) - Guías para agentes AI

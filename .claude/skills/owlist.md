@@ -94,7 +94,7 @@ Load these skills for specific tasks:
 # Development
 pnpm dev              # Start all services
 pnpm dev:frontend     # Frontend only (port 5173)
-pnpm dev:backend      # Backend only (port 3001)
+pnpm dev:backend      # Backend only (port 3000)
 
 # Supabase
 supabase start        # Start local Supabase

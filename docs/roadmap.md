@@ -1,4 +1,4 @@
-# 🦉 OWLIST - Roadmap de Desarrollo
+# OWLIST - Roadmap de Desarrollo
 
 > *Trackea tu diversión*  
 > Versión 1.0 | Enero 2025  
@@ -353,7 +353,7 @@ Preparar la aplicación para uso público.
 
 Features para considerar después del lanzamiento inicial, priorizados por impacto y complejidad.
 
-### 🔴 Alta Prioridad
+### Alta Prioridad
 
 | Feature | Descripción |
 |---------|-------------|
@@ -361,7 +361,7 @@ Features para considerar después del lanzamiento inicial, priorizados por impac
 | **Tiempo real en listas** | Migrar de polling a Supabase Realtime |
 | **PWA** | Convertir a Progressive Web App para instalación en móvil |
 
-### 🟡 Media Prioridad
+### Media Prioridad
 
 | Feature | Descripción |
 |---------|-------------|
@@ -370,7 +370,7 @@ Features para considerar después del lanzamiento inicial, priorizados por impac
 | **Estadísticas avanzadas** | Gráficos de actividad, comparativas año vs año |
 | **Temas/skins** | Variantes del tema retro (noir, technicolor, etc) |
 
-### 🟢 Baja Prioridad
+### Baja Prioridad
 
 | Feature | Descripción |
 |---------|-------------|
@@ -385,11 +385,11 @@ Features para considerar después del lanzamiento inicial, priorizados por impac
 
 | Riesgo | Impacto | Mitigación |
 |--------|:-------:|------------|
-| Cambios en APIs externas (TMDB/AniList) | 🔴 Alto | Capa de abstracción, cacheo agresivo, monitoreo de cambios |
-| Scope creep | 🔴 Alto | MVP definido, features post-lanzamiento claramente separados |
-| Complejidad de listas colaborativas | 🟡 Medio | Empezar con polling simple, iterar hacia tiempo real |
-| Burnout (desarrollador solo) | 🔴 Alto | Fases cortas con entregables claros, celebrar hitos |
-| Problemas de performance con muchos usuarios | 🟡 Medio | Optimización temprana de queries, índices en Supabase |
+| Cambios en APIs externas (TMDB/AniList) | Alto | Capa de abstracción, cacheo agresivo, monitoreo de cambios |
+| Scope creep | Alto | MVP definido, features post-lanzamiento claramente separados |
+| Complejidad de listas colaborativas | Medio | Empezar con polling simple, iterar hacia tiempo real |
+| Burnout (desarrollador solo) | Alto | Fases cortas con entregables claros, celebrar hitos |
+| Problemas de performance con muchos usuarios | Medio | Optimización temprana de queries, índices en Supabase |
 
 ---
 
